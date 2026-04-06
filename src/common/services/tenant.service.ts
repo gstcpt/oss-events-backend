@@ -12,11 +12,12 @@ export class TenantService {
     async getCompanyByOrigin(origin: string) {
         if (!origin) { throw new BadRequestException('Origin header is required'); }
 
-        if (origin === 'oss-events-backend.vercel.app' || origin.startsWith('oss-events-backend.vercel.app:') || origin.includes('oss-events-backend.vercel.app')) {
+        if (origin === 'oss-events-backend.vercel.app' || origin === 'oss-events-frontend.vercel.app' || origin.startsWith('oss-events-backend.vercel.app:') || origin.startsWith('oss-events-frontend.vercel.app:') || origin.includes('oss-events-backend.vercel.app') || origin.includes('oss-events-frontend.vercel.app')) {
             const defaultCompany = await this.prisma.client.companies.findFirst({
                 where: {
                     OR: [
                         { url: 'https://oss-events-backend.vercel.app' },
+                        { url: 'https://oss-events-frontend.vercel.app' },
                         { status: 1 }
                     ]
                 },

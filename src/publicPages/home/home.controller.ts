@@ -10,13 +10,19 @@ export class PublicPageHomeController {
     private getOriginFromRequest(req: Request, originHeader?: string): string {
         if (originHeader) {
             const cleanOrigin = originHeader.replace(/^https?:\/\//, '');
-            if (cleanOrigin === 'oss-events-backend.vercel.app' || cleanOrigin.startsWith('oss-events-backend.vercel.app:')) { return 'oss-events-backend.vercel.app'; }
+            if (cleanOrigin === 'oss-events-backend.vercel.app' || cleanOrigin === 'oss-events-frontend.vercel.app' || 
+                cleanOrigin.startsWith('oss-events-backend.vercel.app:') || cleanOrigin.startsWith('oss-events-frontend.vercel.app:')) { 
+                return 'oss-events-backend.vercel.app'; 
+            }
             return cleanOrigin;
         }
         const host = req.headers.host;
         if (host) {
             const cleanHost = host.replace(/:\d+$/, '');
-            if (cleanHost === 'oss-events-backend.vercel.app' || cleanHost.startsWith('oss-events-backend.vercel.app:')) { return 'oss-events-backend.vercel.app'; }
+            if (cleanHost === 'oss-events-backend.vercel.app' || cleanHost === 'oss-events-frontend.vercel.app' || 
+                cleanHost.startsWith('oss-events-backend.vercel.app:') || cleanHost.startsWith('oss-events-frontend.vercel.app:')) { 
+                return 'oss-events-backend.vercel.app'; 
+            }
             return cleanHost;
         }
         return req.hostname || 'oss-events-backend.vercel.app';
