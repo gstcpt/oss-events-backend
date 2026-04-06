@@ -12,25 +12,18 @@ export class TenantService {
     async getCompanyByOrigin(origin: string) {
         if (!origin) { throw new BadRequestException('Origin header is required'); }
 
-        if (origin === 'localhost' || origin.startsWith('localhost:') || origin.includes('localhost')) {
+        if (origin === 'oss-events-backend.vercel.app' || origin.startsWith('oss-events-backend.vercel.app:') || origin.includes('oss-events-backend.vercel.app')) {
             const defaultCompany = await this.prisma.client.companies.findFirst({
                 where: {
                     OR: [
-                        { url: 'localhost' },
-                        { url: 'http://localhost' },
-                        { url: 'https://localhost' },
-                        { url: 'http://localhost:3001' },
-                        { url: 'localhost:3001' },
-                        { url: 'http://localhost:3000' },
-                        { url: 'localhost:3000' },
-                        { url: 'default' },
+                        { url: 'https://oss-events-backend.vercel.app' },
                         { status: 1 }
                     ]
                 },
                 orderBy: { id: 'asc' }
             });
             if (defaultCompany) { return defaultCompany; }
-            throw new BadRequestException('No company found for localhost. Please create a company with url in the database.');
+            throw new BadRequestException('No company found for oss-events-backend.vercel.app. Please create a company with url in the database.');
         }
         const company = await this.prisma.client.companies.findFirst({
             where: {

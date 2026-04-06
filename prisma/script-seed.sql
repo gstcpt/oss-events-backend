@@ -131,7 +131,7 @@ BEGIN;
         INSERT INTO pack_lines (id, pack_id, module_id, price_ht, tva_value, price_ttc, discount) VALUES (6, 3, 2, 37.851110, 7.191711, 45.042821, 0.000000);
 
     -- companies
-        INSERT INTO companies (id, admin_id, title, url, logo, matricule, domain, date_foundation, description, contact, status) VALUES (1, NULL, 'OSS Event', 'http://localhost:3001', '/images/logos/ossEvent.png', 'ACME-001', 'events', '2010-05-12', 'Top event equipment providers', 'Have questions about our services? Want to discuss your upcoming event? Our team is here to help you create unforgettable moments.', 1);
+        INSERT INTO companies (id, admin_id, title, url, logo, matricule, domain, date_foundation, description, contact, status) VALUES (1, NULL, 'OSS Event', 'https://oss-events-backend.vercel.app', '/images/logos/ossEvent.png', 'ACME-001', 'events', '2010-05-12', 'Top event equipment providers', 'Have questions about our services? Want to discuss your upcoming event? Our team is here to help you create unforgettable moments.', 1);
 
     -- subscriptions
         INSERT INTO subscriptions (id, pack_id, start_date, end_date, company_id, status) VALUES (1, 1, now() - interval '0 days', now() + interval '30 days', 1, 1);

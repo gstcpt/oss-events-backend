@@ -10,16 +10,16 @@ export class PublicPageHomeController {
     private getOriginFromRequest(req: Request, originHeader?: string): string {
         if (originHeader) {
             const cleanOrigin = originHeader.replace(/^https?:\/\//, '');
-            if (cleanOrigin === 'localhost' || cleanOrigin.startsWith('localhost:')) { return 'localhost'; }
+            if (cleanOrigin === 'oss-events-backend.vercel.app' || cleanOrigin.startsWith('oss-events-backend.vercel.app:')) { return 'oss-events-backend.vercel.app'; }
             return cleanOrigin;
         }
         const host = req.headers.host;
         if (host) {
             const cleanHost = host.replace(/:\d+$/, '');
-            if (cleanHost === 'localhost' || cleanHost.startsWith('localhost:')) { return 'localhost'; }
+            if (cleanHost === 'oss-events-backend.vercel.app' || cleanHost.startsWith('oss-events-backend.vercel.app:')) { return 'oss-events-backend.vercel.app'; }
             return cleanHost;
         }
-        return req.hostname || 'localhost';
+        return req.hostname || 'oss-events-backend.vercel.app';
     }
 
     @Get('stats')
