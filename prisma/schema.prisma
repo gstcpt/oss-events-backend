@@ -1,0 +1,837 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model app_settings {
+  id               BigInt             @id @default(autoincrement())
+  famille          String             @db.VarChar(255)
+  title            String?            @db.VarChar(255)
+  value            String?
+  company_settings company_settings[]
+}
+
+model modules {
+  id          BigInt        @id @default(autoincrement())
+  title       String        @db.VarChar(255)
+  code        String?       @db.VarChar(255)
+  pack_lines  pack_lines[]
+  permissions permissions[]
+}
+
+model permissions {
+  id              BigInt            @id @default(autoincrement())
+  title           String            @db.VarChar(255)
+  code            String            @unique @db.VarChar(255)
+  module_id       BigInt?
+  status          Int?              @default(1) @db.SmallInt
+  modules         modules?          @relation(fields: [module_id], references: [id], onUpdate: NoAction, map: "fk_permissions_module_id")
+  role_permission role_permission[]
+
+  @@index([module_id], map: "idx_permissions_module_id")
+}
+
+model roles {
+  id              BigInt            @id @default(autoincrement())
+  title           String            @db.VarChar(255)
+  role_permission role_permission[]
+  users           users[]
+}
+
+model role_permission {
+  id            BigInt      @id @default(autoincrement())
+  role_id       BigInt
+  permission_id BigInt
+  permissions   permissions @relation(fields: [permission_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_role_permission_permission_id")
+  roles         roles       @relation(fields: [role_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_role_permission_role_id")
+
+  @@index([permission_id], map: "idx_role_permission_permission_id")
+  @@index([role_id], map: "idx_role_permission_role_id")
+}
+
+model packs {
+  id            BigInt          @id @default(autoincrement())
+  title         String          @db.VarChar(255)
+  price         Decimal?        @default(0) @db.Decimal(24, 6)
+  description   String?
+  status        Int?            @default(1) @db.SmallInt
+  pack_lines    pack_lines[]
+  subscriptions subscriptions[]
+}
+
+model pack_lines {
+  id        BigInt   @id @default(autoincrement())
+  pack_id   BigInt
+  module_id BigInt?
+  price_ht  Decimal? @default(0) @db.Decimal(24, 6)
+  tva_value Decimal? @default(0) @db.Decimal(24, 6)
+  price_ttc Decimal? @default(0) @db.Decimal(24, 6)
+  discount  Decimal? @default(0) @db.Decimal(24, 6)
+  modules   modules? @relation(fields: [module_id], references: [id], onUpdate: NoAction, map: "fk_pack_lines_module_id")
+  packs     packs    @relation(fields: [pack_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pack_lines_pack_id")
+
+  @@index([module_id], map: "idx_pack_lines_module_id")
+  @@index([pack_id], map: "idx_pack_lines_pack_id")
+}
+
+model subscriptions {
+  id         BigInt     @id @default(autoincrement())
+  pack_id    BigInt?
+  start_date DateTime?  @db.Timestamptz(6)
+  end_date   DateTime?  @db.Timestamptz(6)
+  company_id BigInt?
+  status     Int?       @default(1) @db.SmallInt
+  companies  companies? @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_subscriptions_company_id")
+  packs      packs?     @relation(fields: [pack_id], references: [id], onUpdate: NoAction, map: "fk_subscriptions_pack_id")
+
+  @@index([company_id], map: "idx_subscriptions_company_id")
+  @@index([pack_id], map: "idx_subscriptions_pack_id")
+}
+
+model users {
+  id                          BigInt             @id @default(autoincrement())
+  firstname                   String?            @db.VarChar(255)
+  midname                     String?            @db.VarChar(255)
+  lastname                    String?            @db.VarChar(255)
+  avatar                      String?            @db.VarChar(255)
+  phone                       String?            @db.VarChar(255)
+  username                    String             @unique @db.VarChar(255)
+  email                       String             @unique @db.VarChar(255)
+  email_verified              Boolean?           @default(false)
+  email_verification_token    String?            @db.VarChar(255)
+  password                    String             @db.VarChar(255)
+  last_login                  DateTime?          @db.Timestamptz(6)
+  password_reset_token        String?            @db.VarChar(255)
+  password_reset_token_expiry DateTime?          @db.Timestamptz(6)
+  role_id                     BigInt?
+  company_id                  BigInt?
+  status                      Int?               @default(1) @db.SmallInt
+  blogs                       blogs[]
+  comments                    comments[]
+  companies_admin             companies[]        @relation("companies_admin")
+  events                      events[]
+  items                       items[]
+  logs                        logs[]
+  messages_receiver           messages[]         @relation("messages_receiver")
+  messages_sender             messages[]         @relation("messages_sender")
+  new_interactions            new_interactions[]
+  notifications_actor         notifications[]    @relation("notifications_actor")
+  notifications_receiver      notifications[]    @relation("notifications_receiver")
+  provider_info               provider_info[]
+  companies_user              companies?         @relation("users_company", fields: [company_id], references: [id], onUpdate: NoAction, map: "fk_users_company_id")
+  roles                       roles?             @relation(fields: [role_id], references: [id], onUpdate: NoAction, map: "fk_users_role_id")
+
+  @@index([company_id], map: "idx_users_company_id")
+  @@index([role_id], map: "idx_users_role_id")
+}
+
+model provider_info {
+  id                         BigInt                       @id @default(autoincrement())
+  user_id                    BigInt?
+  category_id                BigInt?
+  ste_title                  String?                      @db.VarChar(255)
+  tarification               String?                      @db.VarChar(255)
+  email                      String?                      @db.VarChar(255)
+  phone_number               String?                      @db.VarChar(255)
+  whatsapp                   String?                      @db.VarChar(255)
+  fix_phone                  String?                      @db.VarChar(255)
+  fax                        String?                      @db.VarChar(255)
+  country                    String?                      @db.VarChar(255)
+  city                       String?                      @db.VarChar(255)
+  postal_code                String?                      @db.VarChar(255)
+  street                     String?                      @db.VarChar(255)
+  department                 String?                      @db.VarChar(255)
+  map_location               String?                      @db.VarChar(255)
+  website                    String?                      @db.VarChar(255)
+  facebook                   String?                      @db.VarChar(255)
+  instagram                  String?                      @db.VarChar(255)
+  tiktok                     String?                      @db.VarChar(255)
+  youtube                    String?                      @db.VarChar(255)
+  experience                 String?                      @db.VarChar(255)
+  foudation_date             DateTime?                    @db.Date
+  policy                     String?
+  payment_en_especes         BigInt?
+  payment_virement           BigInt?
+  payment_par_cheque         BigInt?
+  about                      String?
+  type_provider              BigInt?                      @default(1)
+  logo                       String?                      @db.VarChar(255)
+  country_id                 Int?
+  governorate_id             Int?
+  municipality_id            Int?
+  users                      users?                       @relation(fields: [user_id], references: [id], map: "fk_provider_info_user_id")
+  categories                 categories?                  @relation(fields: [category_id], references: [id])
+  countries                  countries?                   @relation(fields: [country_id], references: [id])
+  governorates               governorates?                @relation(fields: [governorate_id], references: [id])
+  municipalities             municipalities?              @relation(fields: [municipality_id], references: [id])
+  provider_opening_exception provider_opening_exception[]
+  provider_opening_hour      provider_opening_hour[]
+
+  @@index([user_id], map: "idx_provider_info_user_id")
+  @@index([category_id], map: "idx_provider_info_category_id")
+  @@index([country_id], map: "idx_provider_info_country_id")
+  @@index([governorate_id], map: "idx_provider_info_governorate_id")
+  @@index([municipality_id], map: "idx_provider_info_municipality_id")
+}
+
+model provider_opening_hour {
+  id         String        @id @default(uuid())
+  providerId BigInt
+  dayOfWeek  Int
+  startTime  DateTime      @db.Time(6)
+  endTime    DateTime      @db.Time(6)
+  isActive   Boolean       @default(true)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  provider   provider_info @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId, dayOfWeek])
+}
+
+model provider_opening_exception {
+  id         String        @id @default(uuid())
+  providerId BigInt
+  date       DateTime      @db.Date
+  startTime  DateTime?     @db.Time(6)
+  endTime    DateTime?     @db.Time(6)
+  isClosed   Boolean       @default(false)
+  note       String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  provider   provider_info @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId, date])
+}
+
+model faq {
+  id           BigInt        @id @default(autoincrement())
+  question     String        @db.VarChar(255)
+  answer       String
+  company_id   BigInt?
+  status       Int?          @default(1) @db.SmallInt
+  faq_order    Int?
+  section_id   BigInt?
+  faq_sections faq_sections? @relation(fields: [section_id], references: [id], onUpdate: NoAction)
+  companies    companies?    @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_faq_company_id")
+
+  @@index([company_id], map: "idx_faq_company_id")
+  @@index([section_id])
+}
+
+model faq_sections {
+  id         BigInt     @id @default(autoincrement())
+  title      String     @db.VarChar(255)
+  company_id BigInt?
+  status     Int?       @default(1) @db.SmallInt
+  faqs       faq[]
+  companies  companies? @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([company_id])
+}
+
+model privacy_policy {
+  id         BigInt     @id @default(autoincrement())
+  content    String
+  company_id BigInt?    @unique
+  companies  companies? @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_privacy_policy_company_id")
+
+  @@index([company_id], map: "idx_privacy_policy_company_id")
+}
+
+model terms_conditions {
+  id         BigInt     @id @default(autoincrement())
+  content    String?
+  company_id BigInt?    @unique
+  companies  companies? @relation(fields: [company_id], references: [id], onUpdate: NoAction, map: "fk_terms_conditions_company_id")
+
+  @@index([company_id], map: "idx_terms_conditions_company_id")
+}
+
+model logs {
+  id          BigInt     @id @default(autoincrement())
+  entity      String?    @db.VarChar(255)
+  row_id      BigInt?
+  actor_id    BigInt?
+  action      String?    @db.VarChar(255)
+  log_message String?
+  company_id  BigInt?
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  users       users?     @relation(fields: [actor_id], references: [id], onUpdate: NoAction, map: "fk_logs_actor_id")
+  companies   companies? @relation(fields: [company_id], references: [id], onUpdate: NoAction, map: "fk_logs_company_id")
+
+  @@index([actor_id], map: "idx_logs_actor_id")
+  @@index([company_id], map: "idx_logs_company_id")
+}
+
+model messages {
+  id                  BigInt     @id @default(autoincrement())
+  parent_message_id   BigInt?
+  source              String?    @db.VarChar(255)
+  email               String?    @db.VarChar(255)
+  sender_id           BigInt?
+  receiver_id         BigInt?
+  name                String?    @db.VarChar(255)
+  phone               String?    @db.VarChar(255)
+  subject             String?    @db.VarChar(255)
+  message             String?
+  status_for_sender   Int?       @default(1) @db.SmallInt
+  status_for_receiver Int?       @default(1) @db.SmallInt
+  company_id          BigInt?
+  created_at          DateTime?  @default(now()) @db.Timestamptz(6)
+  companies           companies? @relation(fields: [company_id], references: [id], onUpdate: NoAction, map: "fk_messages_company_id")
+  receiver            users?     @relation("messages_receiver", fields: [receiver_id], references: [id], onUpdate: NoAction, map: "fk_messages_receiver_id")
+  sender              users?     @relation("messages_sender", fields: [sender_id], references: [id], onUpdate: NoAction, map: "fk_messages_sender_id")
+  parent_message      messages?  @relation("messages_parent", fields: [parent_message_id], references: [id])
+  replies             messages[] @relation("messages_parent")
+
+  @@index([company_id], map: "idx_messages_company_id")
+  @@index([receiver_id], map: "idx_messages_receiver_id")
+  @@index([sender_id], map: "idx_messages_sender_id")
+  @@index([parent_message_id], map: "idx_messages_parent_message_id")
+}
+
+model notifications {
+  id           BigInt    @id @default(autoincrement())
+  actor_id     BigInt?
+  receiver_id  BigInt?
+  notification String?
+  status       Int?      @default(0) @db.SmallInt
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  actor        users?    @relation("notifications_actor", fields: [actor_id], references: [id], onUpdate: NoAction, map: "fk_notifications_actor_id")
+  receiver     users?    @relation("notifications_receiver", fields: [receiver_id], references: [id], onUpdate: NoAction, map: "fk_notifications_receiver_id")
+
+  @@index([actor_id], map: "idx_notifications_actor_id")
+  @@index([receiver_id], map: "idx_notifications_receiver_id")
+}
+
+model companies {
+  id               BigInt             @id @default(autoincrement())
+  admin_id         BigInt?
+  title            String             @db.VarChar(255)
+  url              String             @db.VarChar(255)
+  logo             String?            @db.VarChar(255)
+  matricule        String?            @db.VarChar(255)
+  domain           String?            @db.VarChar(255)
+  tel              String?            @db.VarChar(255)
+  email            String?            @db.VarChar(255)
+  address          String?            @db.VarChar(255)
+  country_id       Int?
+  countries        countries?         @relation(fields: [country_id], references: [id], onUpdate: NoAction, map: "fk_companies_country_id")
+  governorat_id    Int?
+  governorates     governorates?      @relation(fields: [governorat_id], references: [id], onUpdate: NoAction, map: "fk_companies_governorat_id")
+  municipality_id  Int?
+  municipalities   municipalities?    @relation(fields: [municipality_id], references: [id], onUpdate: NoAction, map: "fk_companies_municipality_id")
+  date_foundation  DateTime?          @db.Date
+  description      String?
+  status           Int?               @default(1) @db.SmallInt
+  contact          String?
+  favicon          String?            @db.VarChar(255)
+  admin            users?             @relation("companies_admin", fields: [admin_id], references: [id], onUpdate: NoAction, map: "fk_companies_admin_id")
+  users_companies  users[]            @relation("users_company")
+  facebook         String?            @db.VarChar(255)
+  instagram        String?            @db.VarChar(255)
+  tiktok           String?            @db.VarChar(255)
+  linkedin         String?            @db.VarChar(255)
+  twitter          String?            @db.VarChar(255)
+  youtube          String?            @db.VarChar(255)
+  blog_media       blog_media[]
+  blogs            blogs[]
+  categories       categories[]
+  comments         comments[]
+  company_settings company_settings[]
+  events           events[]
+  faq              faq[]
+  faq_sections     faq_sections[]
+  item_media       item_media[]
+  items            items[]
+  logs             logs[]
+  messages         messages[]
+  new_interactions new_interactions[]
+  newsletter       newsletter[]
+  pageViews        page_view[]
+  privacy_policy   privacy_policy?
+  subscriptions    subscriptions[]
+  tags             tags[]
+  terms_conditions terms_conditions?
+
+  @@index([admin_id], map: "idx_companies_admin_id")
+}
+
+model company_settings {
+  id              BigInt        @id @default(autoincrement())
+  app_settings_id BigInt?
+  custom_value    String?
+  company_id      BigInt?
+  status          Int?          @default(1) @db.SmallInt
+  app_settings    app_settings? @relation(fields: [app_settings_id], references: [id], onUpdate: NoAction, map: "fk_company_settings_app_settings_id")
+  companies       companies?    @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_company_settings_company_id")
+
+  @@index([app_settings_id], map: "idx_company_settings_app_settings_id")
+  @@index([company_id], map: "idx_company_settings_company_id")
+}
+
+model categories {
+  id               BigInt             @id @default(autoincrement())
+  title            String             @db.VarChar(255)
+  head_category_id BigInt?
+  image            String?            @db.VarChar(255)
+  company_id       BigInt?
+  status           Int?               @default(1) @db.SmallInt
+  description      String?
+  companies        companies?         @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_categories_company_id")
+  parent_category  categories?        @relation("categoriesTocategories", fields: [head_category_id], references: [id], onUpdate: NoAction, map: "fk_categories_head_category_id")
+  children         categories[]       @relation("categoriesTocategories")
+  category_tags    category_tags[]
+  item_category    item_category[]
+  newInteractions  new_interactions[]
+  providerInfos    provider_info[]
+
+  @@index([company_id], map: "idx_categories_company_id")
+  @@index([head_category_id], map: "idx_categories_head_category_id")
+}
+
+model tags {
+  id            BigInt          @id @default(autoincrement())
+  icon          String?         @db.VarChar(255)
+  title         String          @db.VarChar(255)
+  type          String?         @db.VarChar(255)
+  company_id    BigInt?
+  status        Int?            @default(1) @db.SmallInt
+  filter_option Int?            @default(0) @db.SmallInt
+  category_tags category_tags[]
+  form_lines    form_lines[]
+  itemSections  item_sections[]
+  tag_options   tag_options[]
+  companies     companies?      @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tags_company_id")
+
+  @@index([company_id], map: "idx_tags_company_id")
+}
+
+model tag_options {
+  id                 BigInt                 @id @default(autoincrement())
+  tag_id             BigInt
+  option_value       String?                @db.VarChar(255)
+  form_line_option   form_line_options[]
+  itemSectionOptions item_section_options[]
+  tags               tags                   @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tag_options_tag_id")
+
+  @@index([tag_id], map: "idx_tag_options_tag_id")
+}
+
+model category_tags {
+  id          BigInt     @id @default(autoincrement())
+  category_id BigInt
+  tag_id      BigInt
+  categories  categories @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_category_tags_category_id")
+  tags        tags       @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_category_tags_tag_id")
+
+  @@index([category_id], map: "idx_category_tags_category_id")
+  @@index([tag_id], map: "idx_category_tags_tag_id")
+}
+
+model form {
+  id          BigInt       @id @default(autoincrement())
+  title       String       @db.VarChar(255)
+  company_id  BigInt?
+  category_id BigInt?
+  status      Int?         @default(1) @db.SmallInt
+  form_lines  form_lines[]
+
+  @@index([company_id], map: "idx_form_company_id")
+  @@index([category_id], map: "idx_form_category_id")
+}
+
+model form_lines {
+  id                 BigInt                 @id @default(autoincrement())
+  form_id            BigInt
+  label              String?                @db.VarChar(255)
+  type               String?                @db.VarChar(255)
+  tag_id             BigInt?
+  positionv          Int?                   @default(0) @db.SmallInt
+  positionh          Int?                   @default(0) @db.SmallInt
+  required           Boolean?               @default(false)
+  icon               String?                @db.VarChar(255)
+  form_line_options  form_line_options[]
+  form               form                   @relation(fields: [form_id], references: [id], onDelete: Cascade, map: "fk_form_lines_form_id")
+  tags               tags?                  @relation(fields: [tag_id], references: [id], onDelete: Cascade, map: "fk_form_lines_tag_id")
+  itemSectionOptions item_section_options[]
+  item_sections      item_sections[]
+
+  @@index([form_id], map: "idx_form_lines_form_id")
+  @@index([tag_id], map: "idx_form_lines_tag_id")
+}
+
+model form_line_options {
+  id                 BigInt                 @id @default(autoincrement())
+  form_line_id       BigInt
+  tag_option_id      BigInt?
+  option_value       String?                @db.VarChar(255)
+  formLines          form_lines             @relation(fields: [form_line_id], references: [id], onDelete: Cascade, map: "fk_form_line_options_form_line_id")
+  tagOptions         tag_options?           @relation(fields: [tag_option_id], references: [id], map: "fk_form_line_options_tag_option_id")
+  itemSectionOptions item_section_options[]
+
+  @@index([form_line_id], map: "idx_form_line_options_form_line_id")
+  @@index([tag_option_id], map: "idx_form_line_options_tag_option_id")
+}
+
+model items {
+  id              BigInt            @id @default(autoincrement())
+  title           String            @db.VarChar(255)
+  image           String?           @db.VarChar(255)
+  description     String?
+  price           Decimal?          @default(0) @db.Decimal(24, 6)
+  provider_id     BigInt?
+  company_id      BigInt?
+  status          Int?              @default(1) @db.SmallInt
+  cover           String?           @db.VarChar(255)
+  code            String?           @db.VarChar(255)
+  event_lines     event_lines[]
+  item_category   item_category[]
+  item_media      item_media[]
+  item_occupation item_occupation[]
+  item_sections   item_sections[]
+  companies       companies?        @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_items_company_id")
+  users           users?            @relation(fields: [provider_id], references: [id], onUpdate: NoAction, map: "fk_items_provider_id")
+
+  @@index([company_id], map: "idx_items_company_id")
+  @@index([provider_id], map: "idx_items_provider_id")
+}
+
+model item_sections {
+  id                   BigInt                 @id @default(autoincrement())
+  item_id              BigInt
+  icon                 String                 @db.VarChar(255)
+  label                String                 @db.VarChar(255)
+  type                 String                 @db.VarChar(255)
+  positionv            Int?                   @default(0) @db.SmallInt
+  positionh            Int?                   @default(0) @db.SmallInt
+  tagsId               BigInt?
+  form_linesId         BigInt?
+  item_section_options item_section_options[]
+  item                 items                  @relation(fields: [item_id], references: [id], onDelete: Cascade, map: "fk_item_sections_item_id")
+  formLines            form_lines?            @relation(fields: [form_linesId], references: [id])
+  tags                 tags?                  @relation(fields: [tagsId], references: [id])
+
+  @@index([item_id], map: "idx_item_sections_item_id")
+}
+
+model item_section_options {
+  id                  BigInt             @id @default(autoincrement())
+  item_section_id     BigInt
+  form_line_id        BigInt
+  option_value        String?            @db.VarChar(255)
+  selected            Boolean?           @default(false)
+  tag_option_id       BigInt?
+  form_line_optionsId BigInt?
+  form_line           form_lines         @relation(fields: [form_line_id], references: [id], onDelete: Cascade, map: "fk_item_section_options_form_line_id")
+  item_section        item_sections      @relation(fields: [item_section_id], references: [id], onDelete: Cascade, map: "fk_item_section_options_item_section_id")
+  formLineOptions     form_line_options? @relation(fields: [form_line_optionsId], references: [id])
+  tagOptions          tag_options?       @relation(fields: [tag_option_id], references: [id])
+
+  @@index([item_section_id], map: "idx_item_section_options_item_section_id")
+  @@index([form_line_id], map: "idx_item_section_options_form_line_id")
+}
+
+model item_media {
+  id         BigInt     @id @default(autoincrement())
+  file       String     @db.VarChar(255)
+  media_type String?    @db.VarChar(255)
+  item_id    BigInt?
+  company_id BigInt?
+  companies  companies? @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_item_media_company_id")
+  items      items?     @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_item_media_item_id")
+
+  @@index([company_id], map: "idx_item_media_company_id")
+  @@index([item_id], map: "idx_item_media_item_id")
+}
+
+model item_category {
+  id          BigInt     @id @default(autoincrement())
+  item_id     BigInt
+  category_id BigInt
+  categories  categories @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_item_category_category_id")
+  items       items      @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_item_category_item_id")
+
+  @@index([category_id], map: "idx_item_category_category_id")
+  @@index([item_id], map: "idx_item_category_item_id")
+}
+
+model new_interactions {
+  id           BigInt      @id @default(autoincrement())
+  user_id      BigInt
+  company_id   BigInt?
+  target_type  String      @db.VarChar(20)
+  target_id    BigInt
+  type         String      @db.VarChar(20)
+  value        String?     @db.VarChar(50)
+  created_at   DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime    @updatedAt @db.Timestamptz(6)
+  blogsId      BigInt?
+  categoriesId BigInt?
+  blogs        blogs?      @relation(fields: [blogsId], references: [id])
+  categories   categories? @relation(fields: [categoriesId], references: [id])
+  companies    companies?  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  users        users       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, target_type, target_id, type], name: "unique_user_target_type")
+  @@index([target_type, target_id, type, created_at], map: "idx_target_reactions")
+  @@index([user_id, type, created_at], map: "idx_user_interactions")
+  @@index([company_id, target_type], map: "idx_company_interactions")
+}
+
+model comments {
+  id          BigInt     @id @default(autoincrement())
+  user_id     BigInt
+  company_id  BigInt?
+  target_type String     @db.VarChar(20)
+  target_id   BigInt
+  content     String
+  is_edited   Boolean    @default(false)
+  edited_at   DateTime?  @db.Timestamptz(6)
+  is_deleted  Boolean    @default(false)
+  deleted_at  DateTime?  @db.Timestamptz(6)
+  created_at  DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime   @updatedAt @db.Timestamptz(6)
+  companies   companies? @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  users       users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([target_type, target_id, is_deleted, created_at], map: "idx_target_comments")
+  @@index([user_id, created_at], map: "idx_user_comments")
+  @@index([company_id, target_type], map: "idx_company_comments")
+}
+
+model events {
+  id          BigInt        @id @default(autoincrement())
+  client_id   BigInt?
+  title       String        @db.VarChar(255)
+  category    String?       @db.VarChar(255)
+  start_date  DateTime?     @db.Timestamptz(6)
+  end_date    DateTime?     @db.Timestamptz(6)
+  guests      Int?
+  description String?
+  status      Int?          @default(1) @db.SmallInt
+  company_id  BigInt?
+  event_lines event_lines[]
+  users       users?        @relation(fields: [client_id], references: [id], onUpdate: NoAction, map: "fk_events_client_id")
+  companies   companies?    @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_events_company_id")
+
+  @@index([client_id], map: "idx_events_client_id")
+  @@index([company_id], map: "idx_events_company_id")
+}
+
+model event_lines {
+  id              BigInt            @id @default(autoincrement())
+  event_id        BigInt
+  item_id         BigInt?
+  start_date      DateTime?         @db.Timestamptz(6)
+  end_date        DateTime?         @db.Timestamptz(6)
+  price_ht        Decimal?          @default(0) @db.Decimal(24, 6)
+  tva_value       Decimal?          @default(0) @db.Decimal(24, 6)
+  price_ttc       Decimal?          @default(0) @db.Decimal(24, 6)
+  discount        Decimal?          @default(0) @db.Decimal(24, 6)
+  events          events            @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_event_lines_event_id")
+  items           items?            @relation(fields: [item_id], references: [id], onUpdate: NoAction, map: "fk_event_lines_item_id")
+  item_occupation item_occupation[]
+
+  @@index([event_id], map: "idx_event_lines_event_id")
+  @@index([item_id], map: "idx_event_lines_item_id")
+}
+
+model item_occupation {
+  id            BigInt       @id @default(autoincrement())
+  item_id       BigInt
+  event_line_id BigInt?
+  start_date    DateTime?    @db.Timestamptz(6)
+  end_date      DateTime?    @db.Timestamptz(6)
+  status        Int?         @default(0) @db.SmallInt
+  event_lines   event_lines? @relation(fields: [event_line_id], references: [id], onUpdate: NoAction, map: "fk_item_occupation_event_line_id")
+  items         items        @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_item_occupation_item_id")
+
+  @@index([event_line_id], map: "idx_item_occupation_event_line_id")
+  @@index([item_id], map: "idx_item_occupation_item_id")
+}
+
+model blogs {
+  id              BigInt             @id @default(autoincrement())
+  title           String             @db.VarChar(255)
+  content         String
+  image           String?
+  date            DateTime?          @db.Date
+  user_id         BigInt?
+  views           Int?               @default(0) @db.SmallInt
+  shares          Int?               @default(0) @db.SmallInt
+  company_id      BigInt?
+  status          Int?               @default(1) @db.SmallInt
+  blogCategories  blog_categories[]
+  blog_media      blog_media[]
+  blogTags        blog_tags[]
+  companies       companies?         @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_blogs_company_id")
+  users           users?             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_blogs_user_id")
+  newInteractions new_interactions[]
+}
+
+model blog_tags {
+  id        BigInt @id @default(autoincrement())
+  blog_id   BigInt
+  tag_title String
+  blogs     blogs  @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_blog_tags_blog_id")
+}
+
+model blog_categories {
+  id             BigInt @id @default(autoincrement())
+  blog_id        BigInt
+  category_title String
+  blogs          blogs  @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_blog_categories_blog_id")
+}
+
+model blog_media {
+  id         BigInt     @id @default(autoincrement())
+  file       String     @db.VarChar(255)
+  media_type String?    @db.VarChar(255)
+  blog_id    BigInt?
+  company_id BigInt?
+  blogs      blogs?     @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_blog_media_blog_id")
+  companies  companies? @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_blog_media_company_id")
+
+  @@index([company_id], map: "idx_blog_media_company_id")
+  @@index([blog_id], map: "idx_blog_media_blog_id")
+}
+
+model countries {
+  id            Int             @id @default(autoincrement())
+  name          String
+  governorates  governorates[]
+  provider_info provider_info[]
+  companies     companies[]
+}
+
+model governorates {
+  id             Int              @id @default(autoincrement())
+  name           String
+  country_id     Int
+  countries      countries        @relation(fields: [country_id], references: [id], map: "fk_governorates_country_id")
+  municipalities municipalities[]
+  provider_info  provider_info[]
+  companies      companies[]
+}
+
+model municipalities {
+  id             Int             @id @default(autoincrement())
+  name           String
+  code           String
+  governorate_id Int
+  governorates   governorates    @relation(fields: [governorate_id], references: [id], map: "fk_municipalities_governorate_id")
+  provider_info  provider_info[]
+  companies      companies[]
+}
+
+model newsletter {
+  id         BigInt     @id @default(autoincrement())
+  email      String     @db.VarChar(255)
+  company_id BigInt?
+  created_at DateTime?  @db.Timestamptz(6)
+  companies  companies? @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_newsletter_company_id")
+
+  @@index([company_id], map: "idx_newsletter_company_id")
+}
+
+model visitors {
+  id        Int         @id @default(autoincrement())
+  clientId  String      @unique
+  userId    Int?
+  firstSeen DateTime    @default(now())
+  lastSeen  DateTime    @updatedAt
+  userAgent String?
+  device    String?
+  os        String?
+  browser   String?
+  locale    String?
+  ipHash    String?
+  pageViews page_view[]
+  sessions  sessions[]
+
+  @@index([clientId])
+  @@index([userId])
+}
+
+model sessions {
+  id              Int         @id @default(autoincrement())
+  visitorId       Int
+  sessionUuid     String      @unique
+  startedAt       DateTime    @default(now())
+  endedAt         DateTime?
+  durationMs      Int?
+  entryUrl        String?
+  entryResource   String?
+  entryResourceId Int?
+  referrer        String?
+  utmSource       String?
+  utmMedium       String?
+  utmCampaign     String?
+  pageViews       page_view[]
+  visitor         visitors    @relation(fields: [visitorId], references: [id])
+
+  @@index([visitorId, startedAt])
+  @@index([sessionUuid])
+}
+
+model page_view {
+  id                 Int          @id @default(autoincrement())
+  sessionId          Int
+  visitorId          Int
+  userId             Int?
+  resourceType       String?
+  resourceId         Int?
+  path               String
+  title              String?
+  query              Json?
+  startedAt          DateTime     @default(now())
+  endedAt            DateTime?
+  durationMs         Int?
+  scrollDepthPct     Int?
+  isBounce           Boolean?
+  meta               Json?
+  company_id         BigInt?
+  interactions_count Int          @default(0)
+  events             page_event[]
+  companies          companies?   @relation(fields: [company_id], references: [id])
+  session            sessions     @relation(fields: [sessionId], references: [id])
+  visitor            visitors     @relation(fields: [visitorId], references: [id])
+
+  @@index([visitorId, startedAt])
+  @@index([userId, startedAt])
+  @@index([company_id, resourceType, resourceId], map: "idx_pageview_company_resource")
+}
+
+model page_event {
+  id         Int       @id @default(autoincrement())
+  pageViewId Int
+  type       String
+  name       String?
+  payload    Json?
+  createdAt  DateTime  @default(now())
+  pageView   page_view @relation(fields: [pageViewId], references: [id])
+
+  @@index([pageViewId, createdAt])
+}
+
+model daily_aggregate {
+  id                 Int      @id @default(autoincrement())
+  day                DateTime
+  resourceType       String?
+  resourceId         Int?
+  views              Int      @default(0)
+  uniques            Int      @default(0)
+  totalDurationMs    BigInt   @default(0)
+  avgDurationMs      Float?
+  interactions_count Int      @default(0)
+  createdAt          DateTime @default(now())
+
+  @@unique([day, resourceType, resourceId])
+  @@index([day])
+}

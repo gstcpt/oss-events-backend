@@ -1,0 +1,803 @@
+--- Roles and Permissions ---
+Role: Admin | Perm: Logout (auth.logout) | Module: Auth
+Role: Admin | Perm: Check Blog Like (blogs.checkBlogLike) | Module: Blogs
+Role: Admin | Perm: Create Blog (blogs.createBlog) | Module: Blogs
+Role: Admin | Perm: Create Blog Comment (blogs.createBlogComment) | Module: Blogs
+Role: Admin | Perm: Create Blog Rating (blogs.createBlogRating) | Module: Blogs
+Role: Admin | Perm: Delete Blog (blogs.deleteBlog) | Module: Blogs
+Role: Admin | Perm: Delete Blog Comment (blogs.deleteBlogComment) | Module: Blogs
+Role: Admin | Perm: Delete Blog Media (blogs.deleteBlogMedia) | Module: Blogs
+Role: Admin | Perm: Edit Blog Comment (blogs.editBlogComment) | Module: Blogs
+Role: Admin | Perm: Get Blog (blogs.getBlog) | Module: Blogs
+Role: Admin | Perm: Get Blog Average Rating (blogs.getBlogAverageRating) | Module: Blogs
+Role: Admin | Perm: Get Blog Comments (blogs.getBlogComments) | Module: Blogs
+Role: Admin | Perm: Get Blog Details (blogs.getBlogDetails) | Module: Blogs
+Role: Admin | Perm: Get Blogs (blogs.getBlogs) | Module: Blogs
+Role: Admin | Perm: Get User Rating For Blog (blogs.getUserRatingForBlog) | Module: Blogs
+Role: Admin | Perm: Search Blogs (blogs.searchBlogs) | Module: Blogs
+Role: Admin | Perm: Toggle Blog Like (blogs.toggleBlogLike) | Module: Blogs
+Role: Admin | Perm: Track Blog Share (blogs.trackBlogShare) | Module: Blogs
+Role: Admin | Perm: Update Blog (blogs.updateBlog) | Module: Blogs
+Role: Admin | Perm: Create Category (categories.createCategory) | Module: Categories
+Role: Admin | Perm: Delete Category (categories.deleteCategory) | Module: Categories
+Role: Admin | Perm: Get All Categories (categories.getAllCategories) | Module: Categories
+Role: Admin | Perm: Get Categories By Company (categories.getCategoriesByCompany) | Module: Categories
+Role: Admin | Perm: Get Category By Id (categories.getCategoryById) | Module: Categories
+Role: Admin | Perm: Get Main Categories (categories.getMainCategories) | Module: Categories
+Role: Admin | Perm: Update Category (categories.updateCategory) | Module: Categories
+Role: Admin | Perm: Create Comment (comments.createComment) | Module: Comments
+Role: Admin | Perm: Delete Comment (comments.deleteComment) | Module: Comments
+Role: Admin | Perm: Get Comments (comments.getComments) | Module: Comments
+Role: Admin | Perm: Patch Comment (comments.patchComment) | Module: Comments
+Role: Admin | Perm: Update Comment (comments.updateComment) | Module: Comments
+Role: Admin | Perm: Create Company Settings (companies.createCompanySettings) | Module: Companies
+Role: Admin | Perm: Delete Company Settings (companies.deleteCompanySettings) | Module: Companies
+Role: Admin | Perm: Get App Settings (companies.getAppSettings) | Module: Companies
+Role: Admin | Perm: Get Company By Id (companies.getCompanyById) | Module: Companies
+Role: Admin | Perm: Get Company By Url (companies.getCompanyByUrl) | Module: Companies
+Role: Admin | Perm: Get Company Settings (companies.getCompanySettings) | Module: Companies
+Role: Admin | Perm: Update Company (companies.updateCompany) | Module: Companies
+Role: Admin | Perm: Update Company Settings (companies.updateCompanySettings) | Module: Companies
+Role: Admin | Perm: Get Dashboard (dashboard.getDashboard) | Module: Dashboard
+Role: Admin | Perm: Get Revenue Per Month (dashboard.getRevenuePerMonth) | Module: Dashboard
+Role: Admin | Perm: Create Complex Event (events.createComplexEvent) | Module: Events
+Role: Admin | Perm: Delete Event (events.deleteEvent) | Module: Events
+Role: Admin | Perm: Get All Events (events.getAllEvents) | Module: Events
+Role: Admin | Perm: Get Available Items (events.getAvailableItems) | Module: Events
+Role: Admin | Perm: Get Event Statistics (events.getEventStatistics) | Module: Events
+Role: Admin | Perm: Update Complex Event (events.updateComplexEvent) | Module: Events
+Role: Admin | Perm: Create F A Q (faq.createFAQ) | Module: Faq
+Role: Admin | Perm: Delete F A Q (faq.deleteFAQ) | Module: Faq
+Role: Admin | Perm: Get F A Q (faq.getFAQ) | Module: Faq
+Role: Admin | Perm: Get F A Qs (faq.getFAQs) | Module: Faq
+Role: Admin | Perm: Get Public F A Qs (faq.getPublicFAQs) | Module: Faq
+Role: Admin | Perm: Update F A Q (faq.updateFAQ) | Module: Faq
+Role: Admin | Perm: Create Faq Section (faq-sections.createFaqSection) | Module: Faq Sections
+Role: Admin | Perm: Delete Faq Section (faq-sections.deleteFaqSection) | Module: Faq Sections
+Role: Admin | Perm: Get Faq Sections (faq-sections.getFaqSections) | Module: Faq Sections
+Role: Admin | Perm: Update Faq Section (faq-sections.updateFaqSection) | Module: Faq Sections
+Role: Admin | Perm: Create Form (forms.createForm) | Module: Forms
+Role: Admin | Perm: Delete Form (forms.deleteForm) | Module: Forms
+Role: Admin | Perm: Get Form (forms.getForm) | Module: Forms
+Role: Admin | Perm: Get Forms (forms.getForms) | Module: Forms
+Role: Admin | Perm: Update Form (forms.updateForm) | Module: Forms
+Role: Admin | Perm: Get Home Page Data (home.getHomePageData) | Module: Home
+Role: Admin | Perm: Get Reactions (interactions.getReactions) | Module: Interactions
+Role: Admin | Perm: Get User History (interactions.getUserHistory) | Module: Interactions
+Role: Admin | Perm: Rate Target (interactions.rateTarget) | Module: Interactions
+Role: Admin | Perm: Toggle Dislike (interactions.toggleDislike) | Module: Interactions
+Role: Admin | Perm: Toggle Favorite (interactions.toggleFavorite) | Module: Interactions
+Role: Admin | Perm: Toggle Like (interactions.toggleLike) | Module: Interactions
+Role: Admin | Perm: Create Item (items.createItem) | Module: Items
+Role: Admin | Perm: Create Item Media (items.createItemMedia) | Module: Items
+Role: Admin | Perm: Delete Item (items.deleteItem) | Module: Items
+Role: Admin | Perm: Delete Item Media (items.deleteItemMedia) | Module: Items
+Role: Admin | Perm: Get All Items (items.getAllItems) | Module: Items
+Role: Admin | Perm: Get Category Filters (items.getCategoryFilters) | Module: Items
+Role: Admin | Perm: Get Interaction Stats (items.getInteractionStats) | Module: Items
+Role: Admin | Perm: Get Item (items.getItem) | Module: Items
+Role: Admin | Perm: Get Item Media By Item Id (items.getItemMediaByItemId) | Module: Items
+Role: Admin | Perm: Update Item (items.updateItem) | Module: Items
+Role: Admin | Perm: Get All Countries (locations.getAllCountries) | Module: Locations
+Role: Admin | Perm: Get Governrate By Country Id (locations.getGovernrateByCountryId) | Module: Locations
+Role: Admin | Perm: Get Municipality By Governrate Id (locations.getMunicipalityByGovernrateId) | Module: Locations
+Role: Admin | Perm: Get Logs (logs.getLogs) | Module: Logs
+Role: Admin | Perm: Count Inbox Unread Messages By User (messages.countInboxUnreadMessagesByUser) | Module: Messages
+Role: Admin | Perm: Count Messages (messages.countMessages) | Module: Messages
+Role: Admin | Perm: Draft To Send (messages.draftToSend) | Module: Messages
+Role: Admin | Perm: Empty Trash (messages.emptyTrash) | Module: Messages
+Role: Admin | Perm: Get Last5 User Messages (messages.getLast5UserMessages) | Module: Messages
+Role: Admin | Perm: Get Message By Id (messages.getMessageById) | Module: Messages
+Role: Admin | Perm: Get Messages (messages.getMessages) | Module: Messages
+Role: Admin | Perm: Mark All Inbox Messages As Read (messages.markAllInboxMessagesAsRead) | Module: Messages
+Role: Admin | Perm: Mark Message As Read (messages.markMessageAsRead) | Module: Messages
+Role: Admin | Perm: Mark Message As Unread (messages.markMessageAsUnread) | Module: Messages
+Role: Admin | Perm: Move Message To Trash (messages.moveMessageToTrash) | Module: Messages
+Role: Admin | Perm: Restore Message (messages.restoreMessage) | Module: Messages
+Role: Admin | Perm: Save Draft (messages.saveDraft) | Module: Messages
+Role: Admin | Perm: Send Message (messages.sendMessage) | Module: Messages
+Role: Admin | Perm: Send Message Intern (messages.sendMessageIntern) | Module: Messages
+Role: Admin | Perm: Get Modules (modules.getModules) | Module: Modules
+Role: Admin | Perm: Count All By User (notifications.countAllByUser) | Module: Notifications
+Role: Admin | Perm: Count Unread Notifications By User (notifications.countUnreadNotificationsByUser) | Module: Notifications
+Role: Admin | Perm: Find All Notification By User (notifications.findAllNotificationByUser) | Module: Notifications
+Role: Admin | Perm: Find Last5 Notification By User (notifications.findLast5NotificationByUser) | Module: Notifications
+Role: Admin | Perm: Mark All Notification As Read By Id (notifications.markAllNotificationAsReadById) | Module: Notifications
+Role: Admin | Perm: Mark Notification As Read By Id (notifications.markNotificationAsReadById) | Module: Notifications
+Role: Admin | Perm: Mark Notification As Unread By Id (notifications.markNotificationAsUnreadById) | Module: Notifications
+Role: Admin | Perm: Get Packs (packs.getPacks) | Module: Packs
+Role: Admin | Perm: Get Permissions (permissions.getPermissions) | Module: Permissions
+Role: Admin | Perm: Create Privacy Policy (privacy-policy.createPrivacyPolicy) | Module: Privacy Policy
+Role: Admin | Perm: Delete Privacy Policy (privacy-policy.deletePrivacyPolicy) | Module: Privacy Policy
+Role: Admin | Perm: Get Privacy Policies (privacy-policy.getPrivacyPolicies) | Module: Privacy Policy
+Role: Admin | Perm: Get Public Privacy Policy (privacy-policy.getPublicPrivacyPolicy) | Module: Privacy Policy
+Role: Admin | Perm: Update Privacy Policy (privacy-policy.updatePrivacyPolicy) | Module: Privacy Policy
+Role: Admin | Perm: Get Provider (providers.getProvider) | Module: Providers
+Role: Admin | Perm: Get Provider By User Id (providers.getProviderByUserId) | Module: Providers
+Role: Admin | Perm: Update Exceptions (providers.updateExceptions) | Module: Providers
+Role: Admin | Perm: Update Opening Hours (providers.updateOpeningHours) | Module: Providers
+Role: Admin | Perm: Audience Api (rapports.audienceApi) | Module: Rapports
+Role: Admin | Perm: Get Categories (rapports.getCategories) | Module: Rapports
+Role: Admin | Perm: Get Events (rapports.getEvents) | Module: Rapports
+Role: Admin | Perm: Get Events By Month (rapports.getEventsByMonth) | Module: Rapports
+Role: Admin | Perm: Get Events Per Category (rapports.getEventsPerCategory) | Module: Rapports
+Role: Admin | Perm: Get Events Stats (rapports.getEventsStats) | Module: Rapports
+Role: Admin | Perm: Get Items (rapports.getItems) | Module: Rapports
+Role: Admin | Perm: Get Media (rapports.getMedia) | Module: Rapports
+Role: Admin | Perm: Get Media Stats (rapports.getMediaStats) | Module: Rapports
+Role: Admin | Perm: Get Subscriptions Stats (rapports.getSubscriptionsStats) | Module: Rapports
+Role: Admin | Perm: Get Users Per Role And Status (rapports.getUsersPerRoleAndStatus) | Module: Rapports
+Role: Admin | Perm: Get Users Stats (rapports.getUsersStats) | Module: Rapports
+Role: Admin | Perm: Create Role (roles.createRole) | Module: Roles
+Role: Admin | Perm: Delete Role (roles.deleteRole) | Module: Roles
+Role: Admin | Perm: Update Role (roles.updateRole) | Module: Roles
+Role: Admin | Perm: Get Subscriptions (subscription.getSubscriptions) | Module: Subscription
+Role: Admin | Perm: Create Tag (tags.createTag) | Module: Tags
+Role: Admin | Perm: Create Tag Option (tags.createTagOption) | Module: Tags
+Role: Admin | Perm: Delete Tag (tags.deleteTag) | Module: Tags
+Role: Admin | Perm: Delete Tag Option (tags.deleteTagOption) | Module: Tags
+Role: Admin | Perm: Get Tag Options (tags.getTagOptions) | Module: Tags
+Role: Admin | Perm: Get Tags (tags.getTags) | Module: Tags
+Role: Admin | Perm: Get Tags By Category (tags.getTagsByCategory) | Module: Tags
+Role: Admin | Perm: Update Tag (tags.updateTag) | Module: Tags
+Role: Admin | Perm: Create Terms Conditions (terms-conditions.createTermsConditions) | Module: Terms Conditions
+Role: Admin | Perm: Delete Terms Conditions (terms-conditions.deleteTermsConditions) | Module: Terms Conditions
+Role: Admin | Perm: Get Public Terms Conditions (terms-conditions.getPublicTermsConditions) | Module: Terms Conditions
+Role: Admin | Perm: Get Terms Conditions (terms-conditions.getTermsConditions) | Module: Terms Conditions
+Role: Admin | Perm: Update Terms Conditions (terms-conditions.updateTermsConditions) | Module: Terms Conditions
+Role: Admin | Perm: Upload Category Image (upload.uploadCategoryImage) | Module: Upload
+Role: Admin | Perm: Upload Company Logo (upload.uploadCompanyLogo) | Module: Upload
+Role: Admin | Perm: Upload Provider Logo (upload.uploadProviderLogo) | Module: Upload
+Role: Admin | Perm: Upload User Avatar (upload.uploadUserAvatar) | Module: Upload
+Role: Admin | Perm: Create Client (user.createClient) | Module: User
+Role: Admin | Perm: Create Moderator (user.createModerator) | Module: User
+Role: Admin | Perm: Create Provider (user.createProvider) | Module: User
+Role: Admin | Perm: Delete User (user.deleteUser) | Module: User
+Role: Admin | Perm: Get Admins (user.getAdmins) | Module: User
+Role: Admin | Perm: Get All Users (user.getAllUsers) | Module: User
+Role: Admin | Perm: Get Clients (user.getClients) | Module: User
+Role: Admin | Perm: Get Companies (user.getCompanies) | Module: User
+Role: Admin | Perm: Get Company Users (user.getCompanyUsers) | Module: User
+Role: Admin | Perm: Get Moderators (user.getModerators) | Module: User
+Role: Admin | Perm: Get My Profile (user.getMyProfile) | Module: User
+Role: Admin | Perm: Get Providers (user.getProviders) | Module: User
+Role: Admin | Perm: Get Providers By Company (user.getProvidersByCompany) | Module: User
+Role: Admin | Perm: Get Roles (user.getRoles) | Module: User
+Role: Admin | Perm: Get User By Id (user.getUserById) | Module: User
+Role: Admin | Perm: Get Users (user.getUsers) | Module: User
+Role: Admin | Perm: Update Client (user.updateClient) | Module: User
+Role: Admin | Perm: Update Moderator (user.updateModerator) | Module: User
+Role: Admin | Perm: Update My Profile (user.updateMyProfile) | Module: User
+Role: Admin | Perm: Update Provider (user.updateProvider) | Module: User
+Role: Client | Perm: Logout (auth.logout) | Module: Auth
+Role: Client | Perm: Add Blog Comment (blogs.addBlogComment) | Module: Blogs
+Role: Client | Perm: Check Blog Like (blogs.checkBlogLike) | Module: Blogs
+Role: Client | Perm: Create Blog Comment (blogs.createBlogComment) | Module: Blogs
+Role: Client | Perm: Edit Blog Comment (blogs.editBlogComment) | Module: Blogs
+Role: Client | Perm: Get Blog (blogs.getBlog) | Module: Blogs
+Role: Client | Perm: Get Blog Average Rating (blogs.getBlogAverageRating) | Module: Blogs
+Role: Client | Perm: Get Blog Comments (blogs.getBlogComments) | Module: Blogs
+Role: Client | Perm: Get Blog Details (blogs.getBlogDetails) | Module: Blogs
+Role: Client | Perm: Get Blogs (blogs.getBlogs) | Module: Blogs
+Role: Client | Perm: Get Related Blogs (blogs.getRelatedBlogs) | Module: Blogs
+Role: Client | Perm: Get User Rating For Blog (blogs.getUserRatingForBlog) | Module: Blogs
+Role: Client | Perm: Rate Blog (blogs.rateBlog) | Module: Blogs
+Role: Client | Perm: Search Blogs (blogs.searchBlogs) | Module: Blogs
+Role: Client | Perm: Toggle Blog Like (blogs.toggleBlogLike) | Module: Blogs
+Role: Client | Perm: Track Blog Share (blogs.trackBlogShare) | Module: Blogs
+Role: Client | Perm: Get All Categories (categories.getAllCategories) | Module: Categories
+Role: Client | Perm: Get Categories By Company (categories.getCategoriesByCompany) | Module: Categories
+Role: Client | Perm: Get Category By Id (categories.getCategoryById) | Module: Categories
+Role: Client | Perm: Get Main Categories (categories.getMainCategories) | Module: Categories
+Role: Client | Perm: Get Public Categories (categories.getPublicCategories) | Module: Categories
+Role: Client | Perm: Create Comment (comments.createComment) | Module: Comments
+Role: Client | Perm: Delete Comment (comments.deleteComment) | Module: Comments
+Role: Client | Perm: Get Comments (comments.getComments) | Module: Comments
+Role: Client | Perm: Update Comment (comments.updateComment) | Module: Comments
+Role: Client | Perm: Get All Events (events.getAllEvents) | Module: Events
+Role: Client | Perm: Get Available Items (events.getAvailableItems) | Module: Events
+Role: Client | Perm: Get F A Q (faq.getFAQ) | Module: Faq
+Role: Client | Perm: Get Public F A Qs (faq.getPublicFAQs) | Module: Faq
+Role: Client | Perm: Get Faq Sections (faq-sections.getFaqSections) | Module: Faq Sections
+Role: Client | Perm: Get Home Page Data (home.getHomePageData) | Module: Home
+Role: Client | Perm: Get Reactions (interactions.getReactions) | Module: Interactions
+Role: Client | Perm: Get User History (interactions.getUserHistory) | Module: Interactions
+Role: Client | Perm: Rate Target (interactions.rateTarget) | Module: Interactions
+Role: Client | Perm: Toggle Dislike (interactions.toggleDislike) | Module: Interactions
+Role: Client | Perm: Toggle Favorite (interactions.toggleFavorite) | Module: Interactions
+Role: Client | Perm: Toggle Like (interactions.toggleLike) | Module: Interactions
+Role: Client | Perm: Create Public Item Interaction (items.createPublicItemInteraction) | Module: Items
+Role: Client | Perm: Get Category Filters (items.getCategoryFilters) | Module: Items
+Role: Client | Perm: Get Interaction Stats (items.getInteractionStats) | Module: Items
+Role: Client | Perm: Get Public Item By Id (items.getPublicItemById) | Module: Items
+Role: Client | Perm: Get Public Items (items.getPublicItems) | Module: Items
+Role: Client | Perm: Track Item Share (items.trackItemShare) | Module: Items
+Role: Client | Perm: Get All Countries (locations.getAllCountries) | Module: Locations
+Role: Client | Perm: Get Governrate By Country Id (locations.getGovernrateByCountryId) | Module: Locations
+Role: Client | Perm: Get Municipality By Governrate Id (locations.getMunicipalityByGovernrateId) | Module: Locations
+Role: Client | Perm: Count Inbox Unread Messages By User (messages.countInboxUnreadMessagesByUser) | Module: Messages
+Role: Client | Perm: Count Messages (messages.countMessages) | Module: Messages
+Role: Client | Perm: Empty Trash (messages.emptyTrash) | Module: Messages
+Role: Client | Perm: Get Last5 User Messages (messages.getLast5UserMessages) | Module: Messages
+Role: Client | Perm: Get Message By Id (messages.getMessageById) | Module: Messages
+Role: Client | Perm: Get Messages (messages.getMessages) | Module: Messages
+Role: Client | Perm: Mark All Inbox Messages As Read (messages.markAllInboxMessagesAsRead) | Module: Messages
+Role: Client | Perm: Mark Message As Read (messages.markMessageAsRead) | Module: Messages
+Role: Client | Perm: Mark Message As Unread (messages.markMessageAsUnread) | Module: Messages
+Role: Client | Perm: Move Message To Trash (messages.moveMessageToTrash) | Module: Messages
+Role: Client | Perm: Restore Message (messages.restoreMessage) | Module: Messages
+Role: Client | Perm: Send Message (messages.sendMessage) | Module: Messages
+Role: Client | Perm: Send Message Contact (messages.sendMessageContact) | Module: Messages
+Role: Client | Perm: Count All By User (notifications.countAllByUser) | Module: Notifications
+Role: Client | Perm: Count Unread Notifications By User (notifications.countUnreadNotificationsByUser) | Module: Notifications
+Role: Client | Perm: Find All Notification By User (notifications.findAllNotificationByUser) | Module: Notifications
+Role: Client | Perm: Find Last5 Notification By User (notifications.findLast5NotificationByUser) | Module: Notifications
+Role: Client | Perm: Mark All Notification As Read By Id (notifications.markAllNotificationAsReadById) | Module: Notifications
+Role: Client | Perm: Mark Notification As Read By Id (notifications.markNotificationAsReadById) | Module: Notifications
+Role: Client | Perm: Get Public Privacy Policy (privacy-policy.getPublicPrivacyPolicy) | Module: Privacy Policy
+Role: Client | Perm: Get Provider (providers.getProvider) | Module: Providers
+Role: Client | Perm: Get Provider By User Id (providers.getProviderByUserId) | Module: Providers
+Role: Client | Perm: Track Provider Share (providers.trackProviderShare) | Module: Providers
+Role: Client | Perm: Get Tag Options (tags.getTagOptions) | Module: Tags
+Role: Client | Perm: Get Tags (tags.getTags) | Module: Tags
+Role: Client | Perm: Get Tags By Category (tags.getTagsByCategory) | Module: Tags
+Role: Client | Perm: Get Public Terms Conditions (terms-conditions.getPublicTermsConditions) | Module: Terms Conditions
+Role: Client | Perm: Upload User Avatar (upload.uploadUserAvatar) | Module: Upload
+Role: Client | Perm: Get My Profile (user.getMyProfile) | Module: User
+Role: Client | Perm: Update My Profile (user.updateMyProfile) | Module: User
+Role: Provider | Perm: Logout (auth.logout) | Module: Auth
+Role: Provider | Perm: Add Blog Comment (blogs.addBlogComment) | Module: Blogs
+Role: Provider | Perm: Check Blog Like (blogs.checkBlogLike) | Module: Blogs
+Role: Provider | Perm: Create Blog Comment (blogs.createBlogComment) | Module: Blogs
+Role: Provider | Perm: Create Blog Rating (blogs.createBlogRating) | Module: Blogs
+Role: Provider | Perm: Edit Blog Comment (blogs.editBlogComment) | Module: Blogs
+Role: Provider | Perm: Get Blog (blogs.getBlog) | Module: Blogs
+Role: Provider | Perm: Get Blog Average Rating (blogs.getBlogAverageRating) | Module: Blogs
+Role: Provider | Perm: Get Blog Comments (blogs.getBlogComments) | Module: Blogs
+Role: Provider | Perm: Get Blog Details (blogs.getBlogDetails) | Module: Blogs
+Role: Provider | Perm: Get Blogs (blogs.getBlogs) | Module: Blogs
+Role: Provider | Perm: Get Related Blogs (blogs.getRelatedBlogs) | Module: Blogs
+Role: Provider | Perm: Get User Rating For Blog (blogs.getUserRatingForBlog) | Module: Blogs
+Role: Provider | Perm: Rate Blog (blogs.rateBlog) | Module: Blogs
+Role: Provider | Perm: Search Blogs (blogs.searchBlogs) | Module: Blogs
+Role: Provider | Perm: Toggle Blog Like (blogs.toggleBlogLike) | Module: Blogs
+Role: Provider | Perm: Track Blog Share (blogs.trackBlogShare) | Module: Blogs
+Role: Provider | Perm: Get All Categories (categories.getAllCategories) | Module: Categories
+Role: Provider | Perm: Get Categories By Company (categories.getCategoriesByCompany) | Module: Categories
+Role: Provider | Perm: Get Category By Id (categories.getCategoryById) | Module: Categories
+Role: Provider | Perm: Get Main Categories (categories.getMainCategories) | Module: Categories
+Role: Provider | Perm: Create Comment (comments.createComment) | Module: Comments
+Role: Provider | Perm: Delete Comment (comments.deleteComment) | Module: Comments
+Role: Provider | Perm: Get Comments (comments.getComments) | Module: Comments
+Role: Provider | Perm: Update Comment (comments.updateComment) | Module: Comments
+Role: Provider | Perm: Create Complex Event (events.createComplexEvent) | Module: Events
+Role: Provider | Perm: Delete Event (events.deleteEvent) | Module: Events
+Role: Provider | Perm: Get All Events (events.getAllEvents) | Module: Events
+Role: Provider | Perm: Get Available Items (events.getAvailableItems) | Module: Events
+Role: Provider | Perm: Update Complex Event (events.updateComplexEvent) | Module: Events
+Role: Provider | Perm: Get F A Q (faq.getFAQ) | Module: Faq
+Role: Provider | Perm: Get Public F A Qs (faq.getPublicFAQs) | Module: Faq
+Role: Provider | Perm: Get Faq Sections (faq-sections.getFaqSections) | Module: Faq Sections
+Role: Provider | Perm: Get Home Page Data (home.getHomePageData) | Module: Home
+Role: Provider | Perm: Get Reactions (interactions.getReactions) | Module: Interactions
+Role: Provider | Perm: Get User History (interactions.getUserHistory) | Module: Interactions
+Role: Provider | Perm: Rate Target (interactions.rateTarget) | Module: Interactions
+Role: Provider | Perm: Toggle Dislike (interactions.toggleDislike) | Module: Interactions
+Role: Provider | Perm: Toggle Favorite (interactions.toggleFavorite) | Module: Interactions
+Role: Provider | Perm: Toggle Like (interactions.toggleLike) | Module: Interactions
+Role: Provider | Perm: Create Item (items.createItem) | Module: Items
+Role: Provider | Perm: Create Item Media (items.createItemMedia) | Module: Items
+Role: Provider | Perm: Delete Item (items.deleteItem) | Module: Items
+Role: Provider | Perm: Delete Item Media (items.deleteItemMedia) | Module: Items
+Role: Provider | Perm: Get All Items (items.getAllItems) | Module: Items
+Role: Provider | Perm: Get Category Filters (items.getCategoryFilters) | Module: Items
+Role: Provider | Perm: Get Interaction Stats (items.getInteractionStats) | Module: Items
+Role: Provider | Perm: Get Item (items.getItem) | Module: Items
+Role: Provider | Perm: Get Item Media By Item Id (items.getItemMediaByItemId) | Module: Items
+Role: Provider | Perm: Get Public Item By Id (items.getPublicItemById) | Module: Items
+Role: Provider | Perm: Get Public Items (items.getPublicItems) | Module: Items
+Role: Provider | Perm: Track Item Share (items.trackItemShare) | Module: Items
+Role: Provider | Perm: Update Item (items.updateItem) | Module: Items
+Role: Provider | Perm: Get All Countries (locations.getAllCountries) | Module: Locations
+Role: Provider | Perm: Get Governrate By Country Id (locations.getGovernrateByCountryId) | Module: Locations
+Role: Provider | Perm: Get Municipality By Governrate Id (locations.getMunicipalityByGovernrateId) | Module: Locations
+Role: Provider | Perm: Count Inbox Unread Messages By User (messages.countInboxUnreadMessagesByUser) | Module: Messages
+Role: Provider | Perm: Count Messages (messages.countMessages) | Module: Messages
+Role: Provider | Perm: Draft To Send (messages.draftToSend) | Module: Messages
+Role: Provider | Perm: Empty Trash (messages.emptyTrash) | Module: Messages
+Role: Provider | Perm: Get Last5 User Messages (messages.getLast5UserMessages) | Module: Messages
+Role: Provider | Perm: Get Message By Id (messages.getMessageById) | Module: Messages
+Role: Provider | Perm: Get Messages (messages.getMessages) | Module: Messages
+Role: Provider | Perm: Mark All Inbox Messages As Read (messages.markAllInboxMessagesAsRead) | Module: Messages
+Role: Provider | Perm: Mark Message As Read (messages.markMessageAsRead) | Module: Messages
+Role: Provider | Perm: Mark Message As Unread (messages.markMessageAsUnread) | Module: Messages
+Role: Provider | Perm: Move Message To Trash (messages.moveMessageToTrash) | Module: Messages
+Role: Provider | Perm: Restore Message (messages.restoreMessage) | Module: Messages
+Role: Provider | Perm: Save Draft (messages.saveDraft) | Module: Messages
+Role: Provider | Perm: Send Message (messages.sendMessage) | Module: Messages
+Role: Provider | Perm: Send Message Intern (messages.sendMessageIntern) | Module: Messages
+Role: Provider | Perm: Count All By User (notifications.countAllByUser) | Module: Notifications
+Role: Provider | Perm: Count Unread Notifications By User (notifications.countUnreadNotificationsByUser) | Module: Notifications
+Role: Provider | Perm: Find All Notification By User (notifications.findAllNotificationByUser) | Module: Notifications
+Role: Provider | Perm: Find Last5 Notification By User (notifications.findLast5NotificationByUser) | Module: Notifications
+Role: Provider | Perm: Mark All Notification As Read By Id (notifications.markAllNotificationAsReadById) | Module: Notifications
+Role: Provider | Perm: Mark Notification As Read By Id (notifications.markNotificationAsReadById) | Module: Notifications
+Role: Provider | Perm: Mark Notification As Unread By Id (notifications.markNotificationAsUnreadById) | Module: Notifications
+Role: Provider | Perm: Get Privacy Policies (privacy-policy.getPrivacyPolicies) | Module: Privacy Policy
+Role: Provider | Perm: Get Public Privacy Policy (privacy-policy.getPublicPrivacyPolicy) | Module: Privacy Policy
+Role: Provider | Perm: Get Provider (providers.getProvider) | Module: Providers
+Role: Provider | Perm: Get Provider By User Id (providers.getProviderByUserId) | Module: Providers
+Role: Provider | Perm: Track Provider Share (providers.trackProviderShare) | Module: Providers
+Role: Provider | Perm: Update Exceptions (providers.updateExceptions) | Module: Providers
+Role: Provider | Perm: Update Opening Hours (providers.updateOpeningHours) | Module: Providers
+Role: Provider | Perm: Get Tag Options (tags.getTagOptions) | Module: Tags
+Role: Provider | Perm: Get Tags (tags.getTags) | Module: Tags
+Role: Provider | Perm: Get Tags By Category (tags.getTagsByCategory) | Module: Tags
+Role: Provider | Perm: Get Public Terms Conditions (terms-conditions.getPublicTermsConditions) | Module: Terms Conditions
+Role: Provider | Perm: Get Terms Conditions (terms-conditions.getTermsConditions) | Module: Terms Conditions
+Role: Provider | Perm: Upload Provider Logo (upload.uploadProviderLogo) | Module: Upload
+Role: Provider | Perm: Upload User Avatar (upload.uploadUserAvatar) | Module: Upload
+Role: Provider | Perm: Get My Profile (user.getMyProfile) | Module: User
+Role: Provider | Perm: Get Roles (user.getRoles) | Module: User
+Role: Provider | Perm: Update My Profile (user.updateMyProfile) | Module: User
+Role: Root | Perm: Create App Setting (app-settings.createAppSetting) | Module: App Settings
+Role: Root | Perm: Delete App Setting (app-settings.deleteAppSetting) | Module: App Settings
+Role: Root | Perm: Get App Settings By Famille (app-settings.getAppSettingsByFamille) | Module: App Settings
+Role: Root | Perm: Update App Setting (app-settings.updateAppSetting) | Module: App Settings
+Role: Root | Perm: Login (auth.login) | Module: Auth
+Role: Root | Perm: Logout (auth.logout) | Module: Auth
+Role: Root | Perm: New Password (auth.newPassword) | Module: Auth
+Role: Root | Perm: Register (auth.register) | Module: Auth
+Role: Root | Perm: Resend Verification (auth.resendVerification) | Module: Auth
+Role: Root | Perm: Reset Password (auth.resetPassword) | Module: Auth
+Role: Root | Perm: Verify Email (auth.verifyEmail) | Module: Auth
+Role: Root | Perm: Add Blog Comment (blogs.addBlogComment) | Module: Blogs
+Role: Root | Perm: Check Blog Like (blogs.checkBlogLike) | Module: Blogs
+Role: Root | Perm: Create Blog (blogs.createBlog) | Module: Blogs
+Role: Root | Perm: Create Blog Comment (blogs.createBlogComment) | Module: Blogs
+Role: Root | Perm: Create Blog Rating (blogs.createBlogRating) | Module: Blogs
+Role: Root | Perm: Delete Blog (blogs.deleteBlog) | Module: Blogs
+Role: Root | Perm: Delete Blog Comment (blogs.deleteBlogComment) | Module: Blogs
+Role: Root | Perm: Delete Blog Media (blogs.deleteBlogMedia) | Module: Blogs
+Role: Root | Perm: Edit Blog Comment (blogs.editBlogComment) | Module: Blogs
+Role: Root | Perm: Get Blog (blogs.getBlog) | Module: Blogs
+Role: Root | Perm: Get Blog Average Rating (blogs.getBlogAverageRating) | Module: Blogs
+Role: Root | Perm: Get Blog Comments (blogs.getBlogComments) | Module: Blogs
+Role: Root | Perm: Get Blog Details (blogs.getBlogDetails) | Module: Blogs
+Role: Root | Perm: Get Blogs (blogs.getBlogs) | Module: Blogs
+Role: Root | Perm: Get Related Blogs (blogs.getRelatedBlogs) | Module: Blogs
+Role: Root | Perm: Get User Rating For Blog (blogs.getUserRatingForBlog) | Module: Blogs
+Role: Root | Perm: Rate Blog (blogs.rateBlog) | Module: Blogs
+Role: Root | Perm: Search Blogs (blogs.searchBlogs) | Module: Blogs
+Role: Root | Perm: Toggle Blog Like (blogs.toggleBlogLike) | Module: Blogs
+Role: Root | Perm: Track Blog Share (blogs.trackBlogShare) | Module: Blogs
+Role: Root | Perm: Update Blog (blogs.updateBlog) | Module: Blogs
+Role: Root | Perm: Create Category (categories.createCategory) | Module: Categories
+Role: Root | Perm: Delete Category (categories.deleteCategory) | Module: Categories
+Role: Root | Perm: Get All Categories (categories.getAllCategories) | Module: Categories
+Role: Root | Perm: Get Categories By Company (categories.getCategoriesByCompany) | Module: Categories
+Role: Root | Perm: Get Category By Id (categories.getCategoryById) | Module: Categories
+Role: Root | Perm: Get Main Categories (categories.getMainCategories) | Module: Categories
+Role: Root | Perm: Get Public Categories (categories.getPublicCategories) | Module: Categories
+Role: Root | Perm: Update Category (categories.updateCategory) | Module: Categories
+Role: Root | Perm: Create Comment (comments.createComment) | Module: Comments
+Role: Root | Perm: Delete Comment (comments.deleteComment) | Module: Comments
+Role: Root | Perm: Get Comments (comments.getComments) | Module: Comments
+Role: Root | Perm: Patch Comment (comments.patchComment) | Module: Comments
+Role: Root | Perm: Update Comment (comments.updateComment) | Module: Comments
+Role: Root | Perm: Create Company (companies.createCompany) | Module: Companies
+Role: Root | Perm: Create Company Settings (companies.createCompanySettings) | Module: Companies
+Role: Root | Perm: Delete Company (companies.deleteCompany) | Module: Companies
+Role: Root | Perm: Delete Company Settings (companies.deleteCompanySettings) | Module: Companies
+Role: Root | Perm: Get All Admins (companies.getAllAdmins) | Module: Companies
+Role: Root | Perm: Get All Companies (companies.getAllCompanies) | Module: Companies
+Role: Root | Perm: Get App Settings (companies.getAppSettings) | Module: Companies
+Role: Root | Perm: Get Company By Id (companies.getCompanyById) | Module: Companies
+Role: Root | Perm: Get Company By Url (companies.getCompanyByUrl) | Module: Companies
+Role: Root | Perm: Get Company Settings (companies.getCompanySettings) | Module: Companies
+Role: Root | Perm: Update Company (companies.updateCompany) | Module: Companies
+Role: Root | Perm: Update Company Settings (companies.updateCompanySettings) | Module: Companies
+Role: Root | Perm: Get Dashboard (dashboard.getDashboard) | Module: Dashboard
+Role: Root | Perm: Get Revenue Per Month (dashboard.getRevenuePerMonth) | Module: Dashboard
+Role: Root | Perm: Create Complex Event (events.createComplexEvent) | Module: Events
+Role: Root | Perm: Delete Event (events.deleteEvent) | Module: Events
+Role: Root | Perm: Get All Events (events.getAllEvents) | Module: Events
+Role: Root | Perm: Get Available Items (events.getAvailableItems) | Module: Events
+Role: Root | Perm: Get Event Statistics (events.getEventStatistics) | Module: Events
+Role: Root | Perm: Update Complex Event (events.updateComplexEvent) | Module: Events
+Role: Root | Perm: Create F A Q (faq.createFAQ) | Module: Faq
+Role: Root | Perm: Delete F A Q (faq.deleteFAQ) | Module: Faq
+Role: Root | Perm: Get F A Q (faq.getFAQ) | Module: Faq
+Role: Root | Perm: Get F A Qs (faq.getFAQs) | Module: Faq
+Role: Root | Perm: Get Public F A Qs (faq.getPublicFAQs) | Module: Faq
+Role: Root | Perm: Update F A Q (faq.updateFAQ) | Module: Faq
+Role: Root | Perm: Create Faq Section (faq-sections.createFaqSection) | Module: Faq Sections
+Role: Root | Perm: Delete Faq Section (faq-sections.deleteFaqSection) | Module: Faq Sections
+Role: Root | Perm: Get Faq Sections (faq-sections.getFaqSections) | Module: Faq Sections
+Role: Root | Perm: Update Faq Section (faq-sections.updateFaqSection) | Module: Faq Sections
+Role: Root | Perm: Create Form (forms.createForm) | Module: Forms
+Role: Root | Perm: Delete Form (forms.deleteForm) | Module: Forms
+Role: Root | Perm: Get Form (forms.getForm) | Module: Forms
+Role: Root | Perm: Get Forms (forms.getForms) | Module: Forms
+Role: Root | Perm: Update Form (forms.updateForm) | Module: Forms
+Role: Root | Perm: Get Home Page Data (home.getHomePageData) | Module: Home
+Role: Root | Perm: Submit Newsletter (home.submitNewsletter) | Module: Home
+Role: Root | Perm: Get Reactions (interactions.getReactions) | Module: Interactions
+Role: Root | Perm: Get User History (interactions.getUserHistory) | Module: Interactions
+Role: Root | Perm: Rate Target (interactions.rateTarget) | Module: Interactions
+Role: Root | Perm: Toggle Dislike (interactions.toggleDislike) | Module: Interactions
+Role: Root | Perm: Toggle Favorite (interactions.toggleFavorite) | Module: Interactions
+Role: Root | Perm: Toggle Like (interactions.toggleLike) | Module: Interactions
+Role: Root | Perm: Create Item (items.createItem) | Module: Items
+Role: Root | Perm: Create Item Media (items.createItemMedia) | Module: Items
+Role: Root | Perm: Create Public Item Interaction (items.createPublicItemInteraction) | Module: Items
+Role: Root | Perm: Delete Item (items.deleteItem) | Module: Items
+Role: Root | Perm: Delete Item Media (items.deleteItemMedia) | Module: Items
+Role: Root | Perm: Get All Items (items.getAllItems) | Module: Items
+Role: Root | Perm: Get Category Filters (items.getCategoryFilters) | Module: Items
+Role: Root | Perm: Get Interaction Stats (items.getInteractionStats) | Module: Items
+Role: Root | Perm: Get Item (items.getItem) | Module: Items
+Role: Root | Perm: Get Item Media By Item Id (items.getItemMediaByItemId) | Module: Items
+Role: Root | Perm: Get Public Item By Id (items.getPublicItemById) | Module: Items
+Role: Root | Perm: Get Public Items (items.getPublicItems) | Module: Items
+Role: Root | Perm: Track Item Share (items.trackItemShare) | Module: Items
+Role: Root | Perm: Update Item (items.updateItem) | Module: Items
+Role: Root | Perm: Get All Countries (locations.getAllCountries) | Module: Locations
+Role: Root | Perm: Get Governrate By Country Id (locations.getGovernrateByCountryId) | Module: Locations
+Role: Root | Perm: Get Municipality By Governrate Id (locations.getMunicipalityByGovernrateId) | Module: Locations
+Role: Root | Perm: Locations Api (locations.locationsApi) | Module: Locations
+Role: Root | Perm: Delete Log (logs.deleteLog) | Module: Logs
+Role: Root | Perm: Get Logs (logs.getLogs) | Module: Logs
+Role: Root | Perm: Count Inbox Unread Messages By User (messages.countInboxUnreadMessagesByUser) | Module: Messages
+Role: Root | Perm: Count Messages (messages.countMessages) | Module: Messages
+Role: Root | Perm: Draft To Send (messages.draftToSend) | Module: Messages
+Role: Root | Perm: Empty Trash (messages.emptyTrash) | Module: Messages
+Role: Root | Perm: Get Last5 User Messages (messages.getLast5UserMessages) | Module: Messages
+Role: Root | Perm: Get Message By Id (messages.getMessageById) | Module: Messages
+Role: Root | Perm: Get Messages (messages.getMessages) | Module: Messages
+Role: Root | Perm: Mark All Inbox Messages As Read (messages.markAllInboxMessagesAsRead) | Module: Messages
+Role: Root | Perm: Mark Message As Read (messages.markMessageAsRead) | Module: Messages
+Role: Root | Perm: Mark Message As Unread (messages.markMessageAsUnread) | Module: Messages
+Role: Root | Perm: Move Message To Trash (messages.moveMessageToTrash) | Module: Messages
+Role: Root | Perm: Restore Message (messages.restoreMessage) | Module: Messages
+Role: Root | Perm: Save Draft (messages.saveDraft) | Module: Messages
+Role: Root | Perm: Send Message (messages.sendMessage) | Module: Messages
+Role: Root | Perm: Send Message Contact (messages.sendMessageContact) | Module: Messages
+Role: Root | Perm: Send Message Intern (messages.sendMessageIntern) | Module: Messages
+Role: Root | Perm: Create Module (modules.createModule) | Module: Modules
+Role: Root | Perm: Delete Module (modules.deleteModule) | Module: Modules
+Role: Root | Perm: Get Modules (modules.getModules) | Module: Modules
+Role: Root | Perm: Update Module (modules.updateModule) | Module: Modules
+Role: Root | Perm: Newsletter Api (newsletter.newsletterApi) | Module: Newsletter
+Role: Root | Perm: Count All By User (notifications.countAllByUser) | Module: Notifications
+Role: Root | Perm: Count Unread Notifications By User (notifications.countUnreadNotificationsByUser) | Module: Notifications
+Role: Root | Perm: Find All Notification By User (notifications.findAllNotificationByUser) | Module: Notifications
+Role: Root | Perm: Find Last5 Notification By User (notifications.findLast5NotificationByUser) | Module: Notifications
+Role: Root | Perm: Mark All Notification As Read By Id (notifications.markAllNotificationAsReadById) | Module: Notifications
+Role: Root | Perm: Mark Notification As Read By Id (notifications.markNotificationAsReadById) | Module: Notifications
+Role: Root | Perm: Mark Notification As Unread By Id (notifications.markNotificationAsUnreadById) | Module: Notifications
+Role: Root | Perm: Create Pack (packs.createPack) | Module: Packs
+Role: Root | Perm: Create Pack Line (packs.createPackLine) | Module: Packs
+Role: Root | Perm: Delete Pack (packs.deletePack) | Module: Packs
+Role: Root | Perm: Delete Pack Line (packs.deletePackLine) | Module: Packs
+Role: Root | Perm: Get Packs (packs.getPacks) | Module: Packs
+Role: Root | Perm: Update Pack (packs.updatePack) | Module: Packs
+Role: Root | Perm: Update Pack Line (packs.updatePackLine) | Module: Packs
+Role: Root | Perm: Create Permission (permissions.createPermission) | Module: Permissions
+Role: Root | Perm: Delete Permission (permissions.deletePermission) | Module: Permissions
+Role: Root | Perm: Get Permissions (permissions.getPermissions) | Module: Permissions
+Role: Root | Perm: Update Permission (permissions.updatePermission) | Module: Permissions
+Role: Root | Perm: Create Privacy Policy (privacy-policy.createPrivacyPolicy) | Module: Privacy Policy
+Role: Root | Perm: Delete Privacy Policy (privacy-policy.deletePrivacyPolicy) | Module: Privacy Policy
+Role: Root | Perm: Get Privacy Policies (privacy-policy.getPrivacyPolicies) | Module: Privacy Policy
+Role: Root | Perm: Get Public Privacy Policy (privacy-policy.getPublicPrivacyPolicy) | Module: Privacy Policy
+Role: Root | Perm: Update Privacy Policy (privacy-policy.updatePrivacyPolicy) | Module: Privacy Policy
+Role: Root | Perm: Get Provider (providers.getProvider) | Module: Providers
+Role: Root | Perm: Get Provider By User Id (providers.getProviderByUserId) | Module: Providers
+Role: Root | Perm: Track Provider Share (providers.trackProviderShare) | Module: Providers
+Role: Root | Perm: Update Exceptions (providers.updateExceptions) | Module: Providers
+Role: Root | Perm: Update Opening Hours (providers.updateOpeningHours) | Module: Providers
+Role: Root | Perm: Audience Api (rapports.audienceApi) | Module: Rapports
+Role: Root | Perm: Get Categories (rapports.getCategories) | Module: Rapports
+Role: Root | Perm: Get Companies Stats (rapports.getCompaniesStats) | Module: Rapports
+Role: Root | Perm: Get Events (rapports.getEvents) | Module: Rapports
+Role: Root | Perm: Get Events By Month (rapports.getEventsByMonth) | Module: Rapports
+Role: Root | Perm: Get Events Per Category (rapports.getEventsPerCategory) | Module: Rapports
+Role: Root | Perm: Get Events Stats (rapports.getEventsStats) | Module: Rapports
+Role: Root | Perm: Get Items (rapports.getItems) | Module: Rapports
+Role: Root | Perm: Get Media (rapports.getMedia) | Module: Rapports
+Role: Root | Perm: Get Media Stats (rapports.getMediaStats) | Module: Rapports
+Role: Root | Perm: Get Subscriptions Stats (rapports.getSubscriptionsStats) | Module: Rapports
+Role: Root | Perm: Get Users Per Role And Status (rapports.getUsersPerRoleAndStatus) | Module: Rapports
+Role: Root | Perm: Get Users Stats (rapports.getUsersStats) | Module: Rapports
+Role: Root | Perm: Create Role (roles.createRole) | Module: Roles
+Role: Root | Perm: Delete Role (roles.deleteRole) | Module: Roles
+Role: Root | Perm: Update Role (roles.updateRole) | Module: Roles
+Role: Root | Perm: Get Subscriptions (subscription.getSubscriptions) | Module: Subscription
+Role: Root | Perm: Create Tag (tags.createTag) | Module: Tags
+Role: Root | Perm: Create Tag Option (tags.createTagOption) | Module: Tags
+Role: Root | Perm: Delete Tag (tags.deleteTag) | Module: Tags
+Role: Root | Perm: Delete Tag Option (tags.deleteTagOption) | Module: Tags
+Role: Root | Perm: Get Tag Options (tags.getTagOptions) | Module: Tags
+Role: Root | Perm: Get Tags (tags.getTags) | Module: Tags
+Role: Root | Perm: Get Tags By Category (tags.getTagsByCategory) | Module: Tags
+Role: Root | Perm: Update Tag (tags.updateTag) | Module: Tags
+Role: Root | Perm: Create Terms Conditions (terms-conditions.createTermsConditions) | Module: Terms Conditions
+Role: Root | Perm: Delete Terms Conditions (terms-conditions.deleteTermsConditions) | Module: Terms Conditions
+Role: Root | Perm: Get Public Terms Conditions (terms-conditions.getPublicTermsConditions) | Module: Terms Conditions
+Role: Root | Perm: Get Terms Conditions (terms-conditions.getTermsConditions) | Module: Terms Conditions
+Role: Root | Perm: Update Terms Conditions (terms-conditions.updateTermsConditions) | Module: Terms Conditions
+Role: Root | Perm: Upload Category Image (upload.uploadCategoryImage) | Module: Upload
+Role: Root | Perm: Upload Company Logo (upload.uploadCompanyLogo) | Module: Upload
+Role: Root | Perm: Upload Provider Logo (upload.uploadProviderLogo) | Module: Upload
+Role: Root | Perm: Upload User Avatar (upload.uploadUserAvatar) | Module: Upload
+Role: Root | Perm: Create Admin (user.createAdmin) | Module: User
+Role: Root | Perm: Create Client (user.createClient) | Module: User
+Role: Root | Perm: Create Moderator (user.createModerator) | Module: User
+Role: Root | Perm: Create Provider (user.createProvider) | Module: User
+Role: Root | Perm: Delete User (user.deleteUser) | Module: User
+Role: Root | Perm: Get Admins (user.getAdmins) | Module: User
+Role: Root | Perm: Get All Users (user.getAllUsers) | Module: User
+Role: Root | Perm: Get Clients (user.getClients) | Module: User
+Role: Root | Perm: Get Companies (user.getCompanies) | Module: User
+Role: Root | Perm: Get Company Users (user.getCompanyUsers) | Module: User
+Role: Root | Perm: Get Moderators (user.getModerators) | Module: User
+Role: Root | Perm: Get My Profile (user.getMyProfile) | Module: User
+Role: Root | Perm: Get Providers (user.getProviders) | Module: User
+Role: Root | Perm: Get Providers By Company (user.getProvidersByCompany) | Module: User
+Role: Root | Perm: Get Roles (user.getRoles) | Module: User
+Role: Root | Perm: Get User By Id (user.getUserById) | Module: User
+Role: Root | Perm: Get Users (user.getUsers) | Module: User
+Role: Root | Perm: Update Admin (user.updateAdmin) | Module: User
+Role: Root | Perm: Update Client (user.updateClient) | Module: User
+Role: Root | Perm: Update Moderator (user.updateModerator) | Module: User
+Role: Root | Perm: Update My Profile (user.updateMyProfile) | Module: User
+Role: Root | Perm: Update Provider (user.updateProvider) | Module: User
+
+--- Modules ---
+Module: Logs (Code: logs, ID: 17)
+Module: Messages (Code: messages, ID: 18)
+Module: Modules (Code: modules, ID: 19)
+Module: Newsletter (Code: newsletter, ID: 20)
+Module: Notifications (Code: notifications, ID: 21)
+Module: Packs (Code: packs, ID: 23)
+Module: Permissions (Code: permissions, ID: 24)
+Module: Roles (Code: roles, ID: 27)
+Module: Terms Conditions (Code: terms-conditions, ID: 29)
+Module: Blogs (Code: blogs, ID: 30)
+Module: Categories (Code: categories, ID: 32)
+Module: Events (Code: events, ID: 34)
+Module: Faq (Code: faq, ID: 35)
+Module: Faq Sections (Code: faq-sections, ID: 36)
+Module: Forms (Code: forms, ID: 37)
+Module: Items (Code: items, ID: 41)
+Module: Privacy Policy (Code: privacy-policy, ID: 42)
+Module: Tags (Code: tags, ID: 44)
+Module: Auth (Code: auth, ID: 110)
+Module: Rapports (Code: rapports, ID: 111)
+Module: Home (Code: home, ID: 112)
+Module: User (Code: user, ID: 113)
+Module: Subscription (Code: subscription, ID: 114)
+Module: Companies (Code: companies, ID: 8)
+Module: Providers (Code: providers, ID: 9)
+Module: Comments (Code: comments, ID: 12)
+Module: Interactions (Code: interactions, ID: 13)
+Module: App Settings (Code: app-settings, ID: 14)
+Module: Dashboard (Code: dashboard, ID: 15)
+Module: Locations (Code: locations, ID: 16)
+Module: Upload (Code: upload, ID: 57)
+
+--- All Permissions ---
+Perm: Resend Verification (Code: auth.resendVerification, ID: 1262, ModuleID: 110)
+Perm: New Password (Code: auth.newPassword, ID: 1263, ModuleID: 110)
+Perm: Reset Password (Code: auth.resetPassword, ID: 1264, ModuleID: 110)
+Perm: Logout (Code: auth.logout, ID: 1265, ModuleID: 110)
+Perm: Verify Email (Code: auth.verifyEmail, ID: 1266, ModuleID: 110)
+Perm: Login (Code: auth.login, ID: 1267, ModuleID: 110)
+Perm: Register (Code: auth.register, ID: 1268, ModuleID: 110)
+Perm: Get User Rating For Blog (Code: blogs.getUserRatingForBlog, ID: 1269, ModuleID: 30)
+Perm: Update Blog (Code: blogs.updateBlog, ID: 1270, ModuleID: 30)
+Perm: Delete Blog Comment (Code: blogs.deleteBlogComment, ID: 1271, ModuleID: 30)
+Perm: Toggle Blog Like (Code: blogs.toggleBlogLike, ID: 1272, ModuleID: 30)
+Perm: Delete Blog (Code: blogs.deleteBlog, ID: 1273, ModuleID: 30)
+Perm: Get Blogs (Code: blogs.getBlogs, ID: 1274, ModuleID: 30)
+Perm: Get Blog Comments (Code: blogs.getBlogComments, ID: 1275, ModuleID: 30)
+Perm: Check Blog Like (Code: blogs.checkBlogLike, ID: 1276, ModuleID: 30)
+Perm: Create Blog Comment (Code: blogs.createBlogComment, ID: 1277, ModuleID: 30)
+Perm: Delete Blog Media (Code: blogs.deleteBlogMedia, ID: 1278, ModuleID: 30)
+Perm: Create Blog Rating (Code: blogs.createBlogRating, ID: 1279, ModuleID: 30)
+Perm: Get Blog (Code: blogs.getBlog, ID: 1280, ModuleID: 30)
+Perm: Create Blog (Code: blogs.createBlog, ID: 1281, ModuleID: 30)
+Perm: Edit Blog Comment (Code: blogs.editBlogComment, ID: 1282, ModuleID: 30)
+Perm: Get Related Blogs (Code: blogs.getRelatedBlogs, ID: 1283, ModuleID: 30)
+Perm: Get Blog Details (Code: blogs.getBlogDetails, ID: 1284, ModuleID: 30)
+Perm: Track Blog Share (Code: blogs.trackBlogShare, ID: 1285, ModuleID: 30)
+Perm: Add Blog Comment (Code: blogs.addBlogComment, ID: 1286, ModuleID: 30)
+Perm: Search Blogs (Code: blogs.searchBlogs, ID: 1287, ModuleID: 30)
+Perm: Rate Blog (Code: blogs.rateBlog, ID: 1288, ModuleID: 30)
+Perm: Get Blog Average Rating (Code: blogs.getBlogAverageRating, ID: 1289, ModuleID: 30)
+Perm: Delete Category (Code: categories.deleteCategory, ID: 1290, ModuleID: 32)
+Perm: Update Category (Code: categories.updateCategory, ID: 1291, ModuleID: 32)
+Perm: Create Category (Code: categories.createCategory, ID: 1292, ModuleID: 32)
+Perm: Get Category By Id (Code: categories.getCategoryById, ID: 1293, ModuleID: 32)
+Perm: Get Public Categories (Code: categories.getPublicCategories, ID: 1294, ModuleID: 32)
+Perm: Get Categories By Company (Code: categories.getCategoriesByCompany, ID: 1295, ModuleID: 32)
+Perm: Get Main Categories (Code: categories.getMainCategories, ID: 1296, ModuleID: 32)
+Perm: Get All Categories (Code: categories.getAllCategories, ID: 1297, ModuleID: 32)
+Perm: Create Company Settings (Code: companies.createCompanySettings, ID: 1298, ModuleID: 8)
+Perm: Get All Companies (Code: companies.getAllCompanies, ID: 1299, ModuleID: 8)
+Perm: Delete Company (Code: companies.deleteCompany, ID: 1300, ModuleID: 8)
+Perm: Get App Settings (Code: companies.getAppSettings, ID: 1301, ModuleID: 8)
+Perm: Update Company Settings (Code: companies.updateCompanySettings, ID: 1302, ModuleID: 8)
+Perm: Delete Company Settings (Code: companies.deleteCompanySettings, ID: 1303, ModuleID: 8)
+Perm: Get Company By Id (Code: companies.getCompanyById, ID: 1304, ModuleID: 8)
+Perm: Create Company (Code: companies.createCompany, ID: 1305, ModuleID: 8)
+Perm: Update Company (Code: companies.updateCompany, ID: 1306, ModuleID: 8)
+Perm: Get Company By Url (Code: companies.getCompanyByUrl, ID: 1307, ModuleID: 8)
+Perm: Get All Admins (Code: companies.getAllAdmins, ID: 1308, ModuleID: 8)
+Perm: Get Company Settings (Code: companies.getCompanySettings, ID: 1309, ModuleID: 8)
+Perm: Mark Message As Unread (Code: messages.markMessageAsUnread, ID: 1310, ModuleID: 18)
+Perm: Send Message Intern (Code: messages.sendMessageIntern, ID: 1311, ModuleID: 18)
+Perm: Save Draft (Code: messages.saveDraft, ID: 1312, ModuleID: 18)
+Perm: Get Last5 User Messages (Code: messages.getLast5UserMessages, ID: 1313, ModuleID: 18)
+Perm: Send Message Contact (Code: messages.sendMessageContact, ID: 1314, ModuleID: 18)
+Perm: Count Inbox Unread Messages By User (Code: messages.countInboxUnreadMessagesByUser, ID: 1315, ModuleID: 18)
+Perm: Move Message To Trash (Code: messages.moveMessageToTrash, ID: 1316, ModuleID: 18)
+Perm: Get Message By Id (Code: messages.getMessageById, ID: 1317, ModuleID: 18)
+Perm: Get Messages (Code: messages.getMessages, ID: 1318, ModuleID: 18)
+Perm: Draft To Send (Code: messages.draftToSend, ID: 1319, ModuleID: 18)
+Perm: Send Message (Code: messages.sendMessage, ID: 1320, ModuleID: 18)
+Perm: Mark Message As Read (Code: messages.markMessageAsRead, ID: 1321, ModuleID: 18)
+Perm: Restore Message (Code: messages.restoreMessage, ID: 1322, ModuleID: 18)
+Perm: Mark All Inbox Messages As Read (Code: messages.markAllInboxMessagesAsRead, ID: 1323, ModuleID: 18)
+Perm: Count Messages (Code: messages.countMessages, ID: 1324, ModuleID: 18)
+Perm: Empty Trash (Code: messages.emptyTrash, ID: 1325, ModuleID: 18)
+Perm: Get All Events (Code: events.getAllEvents, ID: 1326, ModuleID: 34)
+Perm: Get Available Items (Code: events.getAvailableItems, ID: 1327, ModuleID: 34)
+Perm: Update Complex Event (Code: events.updateComplexEvent, ID: 1328, ModuleID: 34)
+Perm: Create Complex Event (Code: events.createComplexEvent, ID: 1329, ModuleID: 34)
+Perm: Get Event Statistics (Code: events.getEventStatistics, ID: 1330, ModuleID: 34)
+Perm: Delete Event (Code: events.deleteEvent, ID: 1331, ModuleID: 34)
+Perm: Get F A Qs (Code: faq.getFAQs, ID: 1332, ModuleID: 35)
+Perm: Update F A Q (Code: faq.updateFAQ, ID: 1333, ModuleID: 35)
+Perm: Get Public F A Qs (Code: faq.getPublicFAQs, ID: 1334, ModuleID: 35)
+Perm: Create F A Q (Code: faq.createFAQ, ID: 1335, ModuleID: 35)
+Perm: Delete F A Q (Code: faq.deleteFAQ, ID: 1336, ModuleID: 35)
+Perm: Get F A Q (Code: faq.getFAQ, ID: 1337, ModuleID: 35)
+Perm: Delete Item (Code: items.deleteItem, ID: 1338, ModuleID: 41)
+Perm: Get Public Items (Code: items.getPublicItems, ID: 1339, ModuleID: 41)
+Perm: Create Item Media (Code: items.createItemMedia, ID: 1340, ModuleID: 41)
+Perm: Create Public Item Interaction (Code: items.createPublicItemInteraction, ID: 1341, ModuleID: 41)
+Perm: Delete Item Media (Code: items.deleteItemMedia, ID: 1342, ModuleID: 41)
+Perm: Get All Items (Code: items.getAllItems, ID: 1343, ModuleID: 41)
+Perm: Get Item Media By Item Id (Code: items.getItemMediaByItemId, ID: 1344, ModuleID: 41)
+Perm: Get Item (Code: items.getItem, ID: 1345, ModuleID: 41)
+Perm: Get Interaction Stats (Code: items.getInteractionStats, ID: 1346, ModuleID: 41)
+Perm: Track Item Share (Code: items.trackItemShare, ID: 1347, ModuleID: 41)
+Perm: Get Category Filters (Code: items.getCategoryFilters, ID: 1348, ModuleID: 41)
+Perm: Update Item (Code: items.updateItem, ID: 1349, ModuleID: 41)
+Perm: Create Item (Code: items.createItem, ID: 1350, ModuleID: 41)
+Perm: Get Public Item By Id (Code: items.getPublicItemById, ID: 1351, ModuleID: 41)
+Perm: Get Media (Code: rapports.getMedia, ID: 1352, ModuleID: 111)
+Perm: Get Events (Code: rapports.getEvents, ID: 1353, ModuleID: 111)
+Perm: Get Events By Month (Code: rapports.getEventsByMonth, ID: 1354, ModuleID: 111)
+Perm: Get Categories (Code: rapports.getCategories, ID: 1355, ModuleID: 111)
+Perm: Get Events Stats (Code: rapports.getEventsStats, ID: 1356, ModuleID: 111)
+Perm: Get Subscriptions Stats (Code: rapports.getSubscriptionsStats, ID: 1357, ModuleID: 111)
+Perm: Get Items (Code: rapports.getItems, ID: 1358, ModuleID: 111)
+Perm: Get Media Stats (Code: rapports.getMediaStats, ID: 1359, ModuleID: 111)
+Perm: Get Users Stats (Code: rapports.getUsersStats, ID: 1360, ModuleID: 111)
+Perm: Get Companies Stats (Code: rapports.getCompaniesStats, ID: 1361, ModuleID: 111)
+Perm: Get Users Per Role And Status (Code: rapports.getUsersPerRoleAndStatus, ID: 1362, ModuleID: 111)
+Perm: Audience Api (Code: rapports.audienceApi, ID: 1363, ModuleID: 111)
+Perm: Get Events Per Category (Code: rapports.getEventsPerCategory, ID: 1364, ModuleID: 111)
+Perm: Get Home Page Data (Code: home.getHomePageData, ID: 1365, ModuleID: 112)
+Perm: Submit Newsletter (Code: home.submitNewsletter, ID: 1366, ModuleID: 112)
+Perm: Create Privacy Policy (Code: privacy-policy.createPrivacyPolicy, ID: 1367, ModuleID: 42)
+Perm: Update Privacy Policy (Code: privacy-policy.updatePrivacyPolicy, ID: 1368, ModuleID: 42)
+Perm: Delete Privacy Policy (Code: privacy-policy.deletePrivacyPolicy, ID: 1369, ModuleID: 42)
+Perm: Get Privacy Policies (Code: privacy-policy.getPrivacyPolicies, ID: 1370, ModuleID: 42)
+Perm: Get Public Privacy Policy (Code: privacy-policy.getPublicPrivacyPolicy, ID: 1371, ModuleID: 42)
+Perm: Get Provider By User Id (Code: providers.getProviderByUserId, ID: 1372, ModuleID: 9)
+Perm: Get Provider (Code: providers.getProvider, ID: 1373, ModuleID: 9)
+Perm: Update Exceptions (Code: providers.updateExceptions, ID: 1374, ModuleID: 9)
+Perm: Track Provider Share (Code: providers.trackProviderShare, ID: 1375, ModuleID: 9)
+Perm: Update Opening Hours (Code: providers.updateOpeningHours, ID: 1376, ModuleID: 9)
+Perm: Get All Users (Code: user.getAllUsers, ID: 1377, ModuleID: 113)
+Perm: Get Admins (Code: user.getAdmins, ID: 1378, ModuleID: 113)
+Perm: Get Users (Code: user.getUsers, ID: 1379, ModuleID: 113)
+Perm: Get My Profile (Code: user.getMyProfile, ID: 1380, ModuleID: 113)
+Perm: Get Providers (Code: user.getProviders, ID: 1381, ModuleID: 113)
+Perm: Get Clients (Code: user.getClients, ID: 1382, ModuleID: 113)
+Perm: Create Moderator (Code: user.createModerator, ID: 1383, ModuleID: 113)
+Perm: Get Moderators (Code: user.getModerators, ID: 1384, ModuleID: 113)
+Perm: Create Admin (Code: user.createAdmin, ID: 1385, ModuleID: 113)
+Perm: Update Moderator (Code: user.updateModerator, ID: 1386, ModuleID: 113)
+Perm: Delete User (Code: user.deleteUser, ID: 1387, ModuleID: 113)
+Perm: Get Company Users (Code: user.getCompanyUsers, ID: 1388, ModuleID: 113)
+Perm: Get Companies (Code: user.getCompanies, ID: 1389, ModuleID: 113)
+Perm: Create Client (Code: user.createClient, ID: 1390, ModuleID: 113)
+Perm: Get User By Id (Code: user.getUserById, ID: 1391, ModuleID: 113)
+Perm: Create Provider (Code: user.createProvider, ID: 1392, ModuleID: 113)
+Perm: Update Admin (Code: user.updateAdmin, ID: 1393, ModuleID: 113)
+Perm: Get Providers By Company (Code: user.getProvidersByCompany, ID: 1394, ModuleID: 113)
+Perm: Update Client (Code: user.updateClient, ID: 1395, ModuleID: 113)
+Perm: Update Provider (Code: user.updateProvider, ID: 1396, ModuleID: 113)
+Perm: Update My Profile (Code: user.updateMyProfile, ID: 1397, ModuleID: 113)
+Perm: Get Roles (Code: user.getRoles, ID: 1398, ModuleID: 113)
+Perm: Update Terms Conditions (Code: terms-conditions.updateTermsConditions, ID: 1399, ModuleID: 29)
+Perm: Get Terms Conditions (Code: terms-conditions.getTermsConditions, ID: 1400, ModuleID: 29)
+Perm: Delete Terms Conditions (Code: terms-conditions.deleteTermsConditions, ID: 1401, ModuleID: 29)
+Perm: Create Terms Conditions (Code: terms-conditions.createTermsConditions, ID: 1402, ModuleID: 29)
+Perm: Get Public Terms Conditions (Code: terms-conditions.getPublicTermsConditions, ID: 1403, ModuleID: 29)
+Perm: Delete App Setting (Code: app-settings.deleteAppSetting, ID: 1404, ModuleID: 14)
+Perm: Update App Setting (Code: app-settings.updateAppSetting, ID: 1405, ModuleID: 14)
+Perm: Create App Setting (Code: app-settings.createAppSetting, ID: 1406, ModuleID: 14)
+Perm: Get App Settings By Famille (Code: app-settings.getAppSettingsByFamille, ID: 1407, ModuleID: 14)
+Perm: Update Comment (Code: comments.updateComment, ID: 1408, ModuleID: 12)
+Perm: Patch Comment (Code: comments.patchComment, ID: 1409, ModuleID: 12)
+Perm: Get Comments (Code: comments.getComments, ID: 1410, ModuleID: 12)
+Perm: Create Comment (Code: comments.createComment, ID: 1411, ModuleID: 12)
+Perm: Delete Comment (Code: comments.deleteComment, ID: 1412, ModuleID: 12)
+Perm: Upload Company Logo (Code: upload.uploadCompanyLogo, ID: 1413, ModuleID: 57)
+Perm: Upload User Avatar (Code: upload.uploadUserAvatar, ID: 1414, ModuleID: 57)
+Perm: Upload Provider Logo (Code: upload.uploadProviderLogo, ID: 1415, ModuleID: 57)
+Perm: Upload Category Image (Code: upload.uploadCategoryImage, ID: 1416, ModuleID: 57)
+Perm: Create Faq Section (Code: faq-sections.createFaqSection, ID: 1417, ModuleID: 36)
+Perm: Delete Faq Section (Code: faq-sections.deleteFaqSection, ID: 1418, ModuleID: 36)
+Perm: Get Faq Sections (Code: faq-sections.getFaqSections, ID: 1419, ModuleID: 36)
+Perm: Update Faq Section (Code: faq-sections.updateFaqSection, ID: 1420, ModuleID: 36)
+Perm: Get Forms (Code: forms.getForms, ID: 1421, ModuleID: 37)
+Perm: Delete Form (Code: forms.deleteForm, ID: 1422, ModuleID: 37)
+Perm: Update Form (Code: forms.updateForm, ID: 1423, ModuleID: 37)
+Perm: Create Form (Code: forms.createForm, ID: 1424, ModuleID: 37)
+Perm: Get Form (Code: forms.getForm, ID: 1425, ModuleID: 37)
+Perm: Get Tag Options (Code: tags.getTagOptions, ID: 1426, ModuleID: 44)
+Perm: Update Tag (Code: tags.updateTag, ID: 1427, ModuleID: 44)
+Perm: Delete Tag Option (Code: tags.deleteTagOption, ID: 1428, ModuleID: 44)
+Perm: Get Tags By Category (Code: tags.getTagsByCategory, ID: 1429, ModuleID: 44)
+Perm: Create Tag (Code: tags.createTag, ID: 1430, ModuleID: 44)
+Perm: Create Tag Option (Code: tags.createTagOption, ID: 1431, ModuleID: 44)
+Perm: Delete Tag (Code: tags.deleteTag, ID: 1432, ModuleID: 44)
+Perm: Get Tags (Code: tags.getTags, ID: 1433, ModuleID: 44)
+Perm: Toggle Dislike (Code: interactions.toggleDislike, ID: 1434, ModuleID: 13)
+Perm: Get Reactions (Code: interactions.getReactions, ID: 1435, ModuleID: 13)
+Perm: Rate Target (Code: interactions.rateTarget, ID: 1436, ModuleID: 13)
+Perm: Toggle Like (Code: interactions.toggleLike, ID: 1437, ModuleID: 13)
+Perm: Toggle Favorite (Code: interactions.toggleFavorite, ID: 1438, ModuleID: 13)
+Perm: Get User History (Code: interactions.getUserHistory, ID: 1439, ModuleID: 13)
+Perm: Locations Api (Code: locations.locationsApi, ID: 1440, ModuleID: 16)
+Perm: Get All Countries (Code: locations.getAllCountries, ID: 1441, ModuleID: 16)
+Perm: Get Municipality By Governrate Id (Code: locations.getMunicipalityByGovernrateId, ID: 1442, ModuleID: 16)
+Perm: Get Governrate By Country Id (Code: locations.getGovernrateByCountryId, ID: 1443, ModuleID: 16)
+Perm: Delete Log (Code: logs.deleteLog, ID: 1444, ModuleID: 17)
+Perm: Get Logs (Code: logs.getLogs, ID: 1445, ModuleID: 17)
+Perm: Get Modules (Code: modules.getModules, ID: 1446, ModuleID: 19)
+Perm: Delete Module (Code: modules.deleteModule, ID: 1447, ModuleID: 19)
+Perm: Create Module (Code: modules.createModule, ID: 1448, ModuleID: 19)
+Perm: Update Module (Code: modules.updateModule, ID: 1449, ModuleID: 19)
+Perm: Newsletter Api (Code: newsletter.newsletterApi, ID: 1450, ModuleID: 20)
+Perm: Mark All Notification As Read By Id (Code: notifications.markAllNotificationAsReadById, ID: 1451, ModuleID: 21)
+Perm: Mark Notification As Read By Id (Code: notifications.markNotificationAsReadById, ID: 1452, ModuleID: 21)
+Perm: Count Unread Notifications By User (Code: notifications.countUnreadNotificationsByUser, ID: 1453, ModuleID: 21)
+Perm: Count All By User (Code: notifications.countAllByUser, ID: 1454, ModuleID: 21)
+Perm: Find All Notification By User (Code: notifications.findAllNotificationByUser, ID: 1455, ModuleID: 21)
+Perm: Mark Notification As Unread By Id (Code: notifications.markNotificationAsUnreadById, ID: 1456, ModuleID: 21)
+Perm: Find Last5 Notification By User (Code: notifications.findLast5NotificationByUser, ID: 1457, ModuleID: 21)
+Perm: Delete Pack (Code: packs.deletePack, ID: 1458, ModuleID: 23)
+Perm: Delete Pack Line (Code: packs.deletePackLine, ID: 1459, ModuleID: 23)
+Perm: Create Pack Line (Code: packs.createPackLine, ID: 1460, ModuleID: 23)
+Perm: Get Packs (Code: packs.getPacks, ID: 1461, ModuleID: 23)
+Perm: Create Pack (Code: packs.createPack, ID: 1462, ModuleID: 23)
+Perm: Update Pack Line (Code: packs.updatePackLine, ID: 1463, ModuleID: 23)
+Perm: Update Pack (Code: packs.updatePack, ID: 1464, ModuleID: 23)
+Perm: Get Revenue Per Month (Code: dashboard.getRevenuePerMonth, ID: 1465, ModuleID: 15)
+Perm: Get Dashboard (Code: dashboard.getDashboard, ID: 1466, ModuleID: 15)
+Perm: Get Permissions (Code: permissions.getPermissions, ID: 1467, ModuleID: 24)
+Perm: Create Permission (Code: permissions.createPermission, ID: 1468, ModuleID: 24)
+Perm: Update Permission (Code: permissions.updatePermission, ID: 1469, ModuleID: 24)
+Perm: Delete Permission (Code: permissions.deletePermission, ID: 1470, ModuleID: 24)
+Perm: Get Subscriptions (Code: subscription.getSubscriptions, ID: 1471, ModuleID: 114)
+Perm: Create Role (Code: roles.createRole, ID: 1472, ModuleID: 27)
+Perm: Update Role (Code: roles.updateRole, ID: 1473, ModuleID: 27)
+Perm: Delete Role (Code: roles.deleteRole, ID: 1474, ModuleID: 27)
