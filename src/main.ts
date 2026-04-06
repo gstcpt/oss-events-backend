@@ -6,7 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { DateSerializerInterceptor } from './common/interceptors/date-serializer.interceptor';
 
-let cachedServer: Handler<APIGatewayProxyEvent, APIGatewayProxyResult>;
+let cachedServer: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(o => o.trim()) : [];
@@ -25,7 +25,15 @@ async function bootstrap() {
   return serverlessExpress({ app: expressApp });
 }
 
-export const handler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>): Promise<APIGatewayProxyResult> => {
+export const handler: any = async (event: any, context: any, callback: any) => {
   if (!cachedServer) { cachedServer = await bootstrap(); }
-  return cachedServer(event, context, callback) as Promise<APIGatewayProxyResult>;
+  // Distinguish between Vercel (standard req, res) and AWS Lambda (event, context)
+  // Vercel's second argument is the ServerResponse object which contains an 'end' method
+  if (context && typeof context.end === 'function') {
+    return cachedServer(event, context);
+  }
+  // Otherwise, fallback to the AWS Lambda style (if it's not a standard req, res)
+  return cachedServer(event, context, callback);
 };
+
+export default handler;
