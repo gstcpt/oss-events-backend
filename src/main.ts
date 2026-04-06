@@ -1,4 +1,4 @@
-import { Handler, APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
+import { Handler, APIGatewayProxyEvent, APIGatewayProxyResult, Context, Callback } from 'aws-lambda';
 import serverlessExpress from '@vendia/serverless-express';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -25,7 +25,7 @@ async function bootstrap() {
   return serverlessExpress({ app: expressApp });
 }
 
-export const handler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> => {
+export const handler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>): Promise<APIGatewayProxyResult> => {
   if (!cachedServer) { cachedServer = await bootstrap(); }
-  return cachedServer(event, context) as Promise<APIGatewayProxyResult>;
+  return cachedServer(event, context, callback) as Promise<APIGatewayProxyResult>;
 };
