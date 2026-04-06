@@ -122,7 +122,7 @@ export class RaportService {
                 company: u.companies_user?.title || '',
                 role: u.roles?.title || '',
                 status: u.status,
-                created_at: this.fmtDate(logsMap.get(u.id))
+                created_at: this.fmtDate(logsMap.get(u.id) as Date)
             }));
             return { data };
         } catch (error) { this.handleError('Error finding users', error); }
@@ -176,7 +176,7 @@ export class RaportService {
                 email_verified: a.email_verified,
                 status: a.status,
                 company: a.companies_user?.title || '',
-                created_at: this.fmtDate(logsMap.get(a.id))
+                created_at: this.fmtDate(logsMap.get(a.id) as Date)
             }));
             return { data };
         } catch (error) { this.handleError('Error finding admins', error); }
@@ -202,7 +202,7 @@ export class RaportService {
                 email_verified: p.email_verified,
                 status: p.status,
                 company: p.companies_user?.title || '',
-                joined_date: this.fmtDate(logsMap.get(p.id)),
+                joined_date: this.fmtDate(logsMap.get(p.id) as Date),
                 events_provided: itemsMap.get(p.id) || 0
             }));
             return { data };
@@ -229,7 +229,7 @@ export class RaportService {
                 status: c.status,
                 email_verified: c.email_verified,
                 company: c.companies_user?.title || '',
-                registration_date: this.fmtDate(logsMap.get(c.id) || undefined),
+                registration_date: this.fmtDate(logsMap.get(c.id) as Date),
                 events_created: eventsMap.get(c.id) || 0
             }));
             return { data };
@@ -242,7 +242,7 @@ export class RaportService {
             const tagIds = tags.map((c: any) => c.id);
             const logs = await this.prisma.client.logs.findMany({ where: { entity: 'tags', row_id: { in: tagIds }, action: 'create' }, select: { row_id: true, created_at: true }, orderBy: { id: 'desc' } });
             const logsMap = new Map(logs.map((l: any) => [l.row_id, l.created_at]));
-            const data = (tags || []).map((tag: any) => ({ id: Number(tag.id), name: tag.title, color: tag.type || '', company: tag.companies?.title || '', usage_count: tag.category_tags.length, created_at: this.fmtDate(logsMap.get(tag.id)) }));
+            const data = (tags || []).map((tag: any) => ({ id: Number(tag.id), name: tag.title, color: tag.type || '', company: tag.companies?.title || '', usage_count: tag.category_tags.length, created_at: this.fmtDate(logsMap.get(tag.id) as Date) }));
             return { data };
         } catch (error) { this.handleError('Error finding tags', error); }
     }
@@ -265,7 +265,7 @@ export class RaportService {
                     name: cat.title,
                     image: cat.image || '',
                     events_count: eventIds.size,
-                    created_at: this.fmtDate(logsMap.get(cat.id)),
+                    created_at: this.fmtDate(logsMap.get(cat.id) as Date),
                 };
             });
             data.sort((a, b) => b.events_count - a.events_count);
@@ -296,7 +296,7 @@ export class RaportService {
                 status: item.status,
                 event_id: item.event_lines[0]?.event_id ? Number(item.event_lines[0].event_id) : 0,
                 events_count: events_count.get(item.id) || 0,
-                created_at: this.fmtDate(logsMap.get(item.id)),
+                created_at: this.fmtDate(logsMap.get(item.id) as Date),
             }));
             return { data };
         } catch (error) { this.handleError('Error finding items', error); }
@@ -315,7 +315,7 @@ export class RaportService {
                 type: m.media_type || 'application/octet-stream',
                 item_name: m.items?.title || 'N/A',
                 company_name: m.companies?.title || 'N/A',
-                uploaded_at: this.fmtDate(logsMap.get(m.id))
+                uploaded_at: this.fmtDate(logsMap.get(m.id) as Date)
             }));
             return { data };
         } catch (error) { this.handleError('Error finding media', error); }
