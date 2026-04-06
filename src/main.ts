@@ -20,10 +20,10 @@ async function bootstrap() {
   const config = new DocumentBuilder().setTitle('OSS Events API').setDescription('OSS Events API description').setVersion('2.0').addBearerAuth().build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document, {
-    customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.1/swagger-ui.min.css',
+    customCssUrl: 'https://unpkg.com/swagger-ui-dist@4.18.2/swagger-ui.css',
     customJs: [
-      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.1/swagger-ui-bundle.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.18.1/swagger-ui-standalone-preset.js',
+      'https://unpkg.com/swagger-ui-dist@4.18.2/swagger-ui-bundle.js',
+      'https://unpkg.com/swagger-ui-dist@4.18.2/swagger-ui-standalone-preset.js',
     ],
   });
 
