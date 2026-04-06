@@ -21,6 +21,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "ts-node prisma/seed.ts",
+    "postinstall": "prisma generate",
     "it": "rm -rf dist generated && npx prisma generate && clear && nest start --watch",
     "copyzero": "rm -rf dist generated && npx prisma format && npx prisma validate && npx prisma generate && npx prisma db push && npx prisma db seed"
   },
