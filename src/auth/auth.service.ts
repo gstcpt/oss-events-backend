@@ -10,16 +10,17 @@ import { LogService } from '../common/services/log.service';
 import { NotificationService } from '../common/services/notification.service';
 import { UserService } from '../actors/users/user.service';
 import { ProviderService } from '../actors/users/providers/provider.service';
+import { TenantService } from '../common/services/tenant.service';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  constructor(private prisma: PrismaService, private jwtService: JwtService, private emailService: EmailService, private logService: LogService, private notificationService: NotificationService, private readonly userService: UserService, private readonly providerService: ProviderService) { }
+  constructor(private prisma: PrismaService, private jwtService: JwtService, private emailService: EmailService, private logService: LogService, private notificationService: NotificationService, private readonly userService: UserService, private readonly providerService: ProviderService, private readonly tenantService: TenantService) { }
   async register(registerDto: RegisterDto, req: Request) {
     const { firstname, lastname, username, email, password, origin, role_id } = registerDto;
     const hashedPassword = await bcrypt.hash(password, 10);
     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const company = await this.prisma.client.companies.findFirst({ where: { url: origin } });
+    const company = await this.tenantService.getCompanyByOrigin(origin);
     if (!company) { throw new BadRequestException(`No company found for url: ${origin}`); }
     const existingUser = await this.prisma.client.users.findFirst({ where: { email, company_id: Number(company.id) } });
     if (existingUser) { throw new BadRequestException('User with this email already exists for this company'); }
@@ -58,7 +59,7 @@ export class AuthService {
     if (user.email_verified) { throw new BadRequestException('Email already verified'); }
     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     await this.prisma.client.users.update({ where: { id: user.id }, data: { email_verification_token: token } });
-    const company = await this.prisma.client.companies.findFirst({ where: { url: origin } });
+    const company = await this.tenantService.getCompanyByOrigin(origin);
     await this.emailService.sendEmailVerification(email, token, company?.title || 'Your Company');
     return { message: 'Verification email resent' };
   }
@@ -66,7 +67,7 @@ export class AuthService {
     try {
       const origin = req.headers.origin as string;
       if (!origin) { throw new BadRequestException('Origin header not found in request'); }
-      const company = await this.prisma.client.companies.findFirst({ where: { url: origin } });
+      const company = await this.tenantService.getCompanyByOrigin(origin);
       if (!company) { throw new BadRequestException(`No company found for url: ${origin}`); }
       const user = await this.prisma.client.users.findFirst({ where: { email: email, company_id: Number(company.id) } });
       if (user) {
@@ -94,7 +95,7 @@ export class AuthService {
     this.logger.log(`Login attempt for email: ${loginDto.email}`);
     try {
       const { email, password, origin } = loginDto;
-      const company = await this.prisma.client.companies.findFirst({ where: { url: origin } });
+      const company = await this.tenantService.getCompanyByOrigin(origin);
       if (!company) {
         this.logger.warn(`No company found for origin: ${origin}`);
         throw new BadRequestException(`No company found for url: ${origin}`);

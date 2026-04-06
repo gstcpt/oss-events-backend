@@ -9,8 +9,9 @@ export class TenantService {
      * @param origin - The origin URL from request headers
      * @returns Company object or throws exception if not found
      */
-    async getCompanyByOrigin(origin: string) {
-        if (!origin) { throw new BadRequestException('Origin header is required'); }
+    async getCompanyByOrigin(originParam: string) {
+        if (!originParam) { throw new BadRequestException('Origin header is required'); }
+        const origin = originParam.replace(/\/$/, '');
 
         if (origin === 'oss-events-backend.vercel.app' || origin === 'oss-events-frontend.vercel.app' || origin.startsWith('oss-events-backend.vercel.app:') || origin.startsWith('oss-events-frontend.vercel.app:') || origin.includes('oss-events-backend.vercel.app') || origin.includes('oss-events-frontend.vercel.app')) {
             const defaultCompany = await this.prisma.client.companies.findFirst({
