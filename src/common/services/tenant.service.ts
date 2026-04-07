@@ -12,21 +12,7 @@ export class TenantService {
     async getCompanyByOrigin(originParam: string) {
         if (!originParam) { throw new BadRequestException('Origin header is required'); }
         const origin = originParam.replace(/\/$/, '');
-
-        if (origin === 'oss-events-backend.vercel.app' || origin === 'oss-events-frontend.vercel.app' || origin.startsWith('oss-events-backend.vercel.app:') || origin.startsWith('oss-events-frontend.vercel.app:') || origin.includes('oss-events-backend.vercel.app') || origin.includes('oss-events-frontend.vercel.app')) {
-            const defaultCompany = await this.prisma.client.companies.findFirst({
-                where: {
-                    OR: [
-                        { url: 'https://oss-events-backend.vercel.app' },
-                        { url: 'https://oss-events-frontend.vercel.app' },
-                        { status: 1 }
-                    ]
-                },
-                orderBy: { id: 'asc' }
-            });
-            if (defaultCompany) { return defaultCompany; }
-            throw new BadRequestException('No company found for oss-events-backend.vercel.app. Please create a company with url in the database.');
-        }
+        if (!origin) { throw new BadRequestException('Origin is not defined'); }
         const company = await this.prisma.client.companies.findFirst({
             where: {
                 OR: [
@@ -40,9 +26,7 @@ export class TenantService {
                 status: 1
             }
         });
-        if (!company) {
-            throw new BadRequestException(`No active company found for url: ${origin}. Searched for: ${origin}, http://${origin}, https://${origin}${origin.includes(':') ? `, ${origin.split(':')[0]}` : ''}`);
-        }
+        if (!company) { throw new BadRequestException(`No active company found for url: ${origin}. Searched for: ${origin}, http://${origin}, https://${origin}${origin.includes(':') ? `, ${origin.split(':')[0]}` : ''}`); }
         return company;
     }
     /**
