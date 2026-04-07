@@ -57,7 +57,7 @@ export class AudianceController {
 
   @Get('stats')
   @ApiOperation({ summary: 'Get audience stats' })
-  async getAudienceStats(@Query() query: GetAudienceStatsDto, @User() user: any) { console.error(user); return this.audianceService.getAudienceStats(query, user); }
+  async getAudienceStats(@Query() query: GetAudienceStatsDto, @User() user: any) { return this.audianceService.getAudienceStats(query, user); }
 
   @Get('daily-aggregates')
   @ApiOperation({ summary: 'Get daily aggregates' })

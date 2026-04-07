@@ -110,8 +110,6 @@ export class UserService {
       const result = await this.prisma.client.users.findMany({ where: { role_id: roleId, company_id: companyId } });
       return this.convertBigIntToNumber(result);
     } catch (error) {
-      console.log("Error finding users by role and company", error);
-      console.error("Error finding users by role and company", error);
       throw new BadRequestException('Error finding users by role and company');
     }
   }

@@ -222,9 +222,8 @@ export class AudianceService {
                     browserStats: browserStats.filter(stat => stat.browser).map(stat => ({ browser: stat.browser, count: stat._count.id })),
                 },
             };
-        } catch (error) { 
-            console.error('getAudienceStats error:', error);
-            return new BadRequestException('Internal server error while fetching audience statistics'); 
+        } catch (error) {
+            return new BadRequestException('Internal server error while fetching audience statistics');
         }
     }
 

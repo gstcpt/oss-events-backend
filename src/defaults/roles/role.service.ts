@@ -54,13 +54,13 @@ export class RoleService {
             select: { id: true }
           });
           const existingIds = existingPermissions.map(p => p.id);
-          
+
           if (existingIds.length > 0) {
-            await this.prisma.client.role_permission.createMany({ 
-              data: existingIds.map((permissionId) => ({ 
-                role_id: BigInt(id), 
-                permission_id: permissionId 
-              })) 
+            await this.prisma.client.role_permission.createMany({
+              data: existingIds.map((permissionId) => ({
+                role_id: BigInt(id),
+                permission_id: permissionId
+              }))
             });
           }
         }
@@ -70,9 +70,8 @@ export class RoleService {
       await this.logService.createLogForUserAction(Number(currentUser.id), 'roles', Number(role.id), 'update', `Role updated: ${title ?? role.title}`);
       const result = await this.findOneRaw(id);
       return serializeBigInt(result);
-    } catch (error) { 
-      console.error('Error updating role:', error);
-      throw new BadRequestException('Error updating role: ' + error.message); 
+    } catch (error) {
+      throw new BadRequestException('Error updating role: ' + error.message);
     }
   }
 
