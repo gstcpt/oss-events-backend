@@ -56,9 +56,9 @@ export class DashboardService {
                 data.lastClients = await this.getLastClients(currentUser);
                 data.lastEvents = await this.getLastEvents(currentUser);
                 data.quickAccess = [
-                    { icon: 'Building2', title: 'Manage Companies', description: 'View and manage all registered companies.', buttonText: 'View Companies', href: '/dashboard/companies' },
-                    { icon: 'Users', title: 'User Management', description: 'Manage system-wide users and roles.', buttonText: 'View Users', href: '/dashboard/users' },
-                    { icon: 'BarChart3', title: 'Global Stats', description: 'Deep dive into system analytics.', buttonText: 'View Reports', href: '/dashboard/reports' }
+                    { icon: 'Building2', key: 'manageCompanies', href: '/dashboard/companies' },
+                    { icon: 'Users', key: 'userManagement', href: '/dashboard/users' },
+                    { icon: 'BarChart3', key: 'globalStats', href: '/dashboard/reports' }
                 ];
             } else if (role === 'Admin') {
                 data.stats = await this.getAdminStats(currentUser);
@@ -72,27 +72,27 @@ export class DashboardService {
                 data.lastEvents = await this.getLastEvents(currentUser);
                 data.revenues = await this.getRevenues(currentUser);
                 data.quickAccess = [
-                    { icon: 'Plus', title: 'Add Provider', description: 'Onboard a new service provider.', buttonText: 'Add Provider', href: '/dashboard/users/providers' },
-                    { icon: 'Users', title: 'Manage Clients', description: 'View your company\'s client base.', buttonText: 'View Clients', href: '/dashboard/users/clients' },
-                    { icon: 'Calendar', title: 'View Events', description: 'Manage company events and bookings.', buttonText: 'View Events', href: '/dashboard/events' }
+                    { icon: 'Plus', key: 'addProvider', href: '/dashboard/users/providers' },
+                    { icon: 'Users', key: 'manageClients', href: '/dashboard/users/clients' },
+                    { icon: 'Calendar', key: 'viewEvents', href: '/dashboard/events' }
                 ];
             } else if (role === 'Provider') {
                 data.stats = await this.getProviderStats(currentUser);
                 data.liveActivity = await this.getLiveActivity('Provider', undefined, currentUser.id);
                 data.upcomingEvents = await this.getProviderUpcomingEvents(currentUser);
                 data.quickAccess = [
-                    { icon: 'PlusCircle', title: 'New Item', description: 'Add a new product or service.', buttonText: 'Add Item', href: '/dashboard/items/new' },
-                    { icon: 'Package', title: 'My Items', description: 'Manage your active listings.', buttonText: 'View Items', href: '/dashboard/items' },
-                    { icon: 'CalendarDays', title: 'Upcoming Bookings', description: 'Check your scheduled events.', buttonText: 'View Calendar', href: '/dashboard/calendar' }
+                    { icon: 'PlusCircle', key: 'newItem', href: '/dashboard/items' },
+                    { icon: 'Package', key: 'myItems', href: '/dashboard/items' },
+                    { icon: 'CalendarDays', key: 'upcomingBookings', href: '/dashboard/calendar' }
                 ];
             } else if (role === 'Client') {
                 data.stats = await this.getClientStats(currentUser);
                 data.liveActivity = await this.getLiveActivity('Client', undefined, currentUser.id);
                 data.upcomingEvents = await this.getClientUpcomingEvents(currentUser);
                 data.quickAccess = [
-                    { icon: 'Search', title: 'Find Items', description: 'Browse available services.', buttonText: 'Browse', href: '/items' },
-                    { icon: 'PlusSquare', title: 'Book Event', description: 'Plan your next amazing event.', buttonText: 'Create Event', href: '/createEvent' },
-                    { icon: 'Heart', title: 'Favorites', description: 'Items you\'ve liked or saved.', buttonText: 'View Favorites', href: '/dashboard/favorites' }
+                    { icon: 'Search', key: 'findItems', href: '/items' },
+                    { icon: 'PlusSquare', key: 'bookEvent', href: '/createEvent' },
+                    { icon: 'Heart', key: 'favorites', href: '/dashboard/favorites' }
                 ];
             }
 
@@ -145,16 +145,24 @@ export class DashboardService {
         if (user_id && role === 'Provider') { eventWhere.event_lines = { some: { items: { provider_id: BigInt(user_id) } } }; }
         const events = await this.prisma.client.events.findMany({ where: eventWhere, orderBy: { id: 'desc' }, take: 5, include: { users: { select: { firstname: true, lastname: true, avatar: true } } } });
         for (const event of events) {
-            activities.push({ id: `event-${event.id}`, type: 'event', action: 'BOOKING', title: event.title, user: `${event.users?.firstname || 'System'} ${event.users?.lastname || ''}`, avatar: event.users?.avatar, timestamp: new Date(), description: `New event booking: ${event.title}` });
+            activities.push({
+                id: `event-${event.id}`,
+                type: 'event',
+                action: 'BOOKING',
+                title: event.title,
+                user: `${event.users?.firstname || 'System'} ${event.users?.lastname || ''}`,
+                avatar: event.users?.avatar,
+                timestamp: new Date(),
+                description: { typeKey: 'newEventBooking', title: event.title }
+            });
         }
         return activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 10);
     }
 
     private getInteractionDescription(role: string, inter: any) {
-        const userName = `${inter.users.firstname} ${inter.users.lastname}`;
-        const verb = inter.type === 'LIKE' ? 'liked' : inter.type === 'RATING' ? `rated (${inter.value}/5)` : 'interacted with';
         const target = inter.target_type.toLowerCase();
-        return `${userName} ${verb} a ${target}.`;
+        const typeKey = inter.type === 'LIKE' ? 'liked' : inter.type === 'RATING' ? 'rated' : 'interacted';
+        return { typeKey, target, value: inter.type === 'RATING' ? inter.value : null };
     }
 
     async getStats(currentUser: any) {
