@@ -48,6 +48,7 @@ export class AuthService {
       throw error;
     }
   }
+
   async verifyEmail(token: string) {
     const user = await this.prisma.client.users.findFirst({ where: { email_verification_token: token }, });
     if (user) {
@@ -62,6 +63,7 @@ export class AuthService {
     }
     throw new BadRequestException('Invalid token');
   }
+
   async resendVerification(email: string, origin: string) {
     const user = await this.prisma.client.users.findFirst({ where: { email } });
     if (!user) { throw new BadRequestException('User not found'); }
@@ -72,6 +74,7 @@ export class AuthService {
     await this.emailService.sendEmailVerification(email, token, company?.title || 'Your Company');
     return { message: 'Verification email resent' };
   }
+
   async resetPassword(email: string, req: Request) {
     try {
       const origin = req.headers.origin as string;
@@ -88,6 +91,7 @@ export class AuthService {
       }
     } catch (error) { throw new BadRequestException('User not found'); }
   }
+
   async newPassword(token: string, newPassword: string) {
     const user = await this.prisma.client.users.findFirst({ where: { password_reset_token: token, password_reset_token_expiry: { gt: new Date() } } });
     if (user) {
@@ -107,6 +111,7 @@ export class AuthService {
     }
     throw new BadRequestException('Invalid or expired token');
   }
+
   async login(loginDto: LoginDto) {
     this.logger.log(`Login attempt for email: ${loginDto.email}`);
     try {

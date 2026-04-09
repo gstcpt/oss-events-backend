@@ -27,6 +27,12 @@ export class UserService {
       const userTestEmail = await this.prisma.client.users.findUnique({ where: { email: createUserDto.email } });
       if (userTestEmail) throw new BadRequestException('Email already exists.');
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+      
+      // Validate password hash length (must be 60 for bcrypt)
+      if (hashedPassword.length !== 60) {
+        throw new BadRequestException('Password hashing failed. Please try again.');
+      }
+      
       const data: any = {
         firstname: createUserDto.firstname,
         midname: createUserDto.midname,
@@ -58,7 +64,13 @@ export class UserService {
       if (updateUserDto.phone !== undefined) data.phone = updateUserDto.phone;
       if (updateUserDto.username !== undefined) data.username = updateUserDto.username;
       if (updateUserDto.email !== undefined) data.email = updateUserDto.email;
-      if (updateUserDto.password !== undefined) { data.password = await bcrypt.hash(updateUserDto.password, 10); }
+      if (updateUserDto.password !== undefined) { 
+        const newHashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+        if (newHashedPassword.length !== 60) {
+          throw new BadRequestException('Password hashing failed. Please try again.');
+        }
+        data.password = newHashedPassword; 
+      }
       if (updateUserDto.status !== undefined) data.status = updateUserDto.status ? 1 : 0;
       if (updateUserDto.company_id !== undefined) data.company_id = updateUserDto.company_id;
       if (updateUserDto.role_id !== undefined) data.role_id = updateUserDto.role_id;
