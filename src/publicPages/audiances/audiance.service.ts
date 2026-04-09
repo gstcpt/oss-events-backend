@@ -89,7 +89,7 @@ export class AudianceService {
                 if (startDate) where.firstSeen.gte = new Date(startDate);
                 if (endDate) where.firstSeen.lte = new Date(endDate);
             }
-            const [data, total] = await Promise.all([this.prisma.client.visitors.findMany({ where: visitorWhere, skip, take: limit, orderBy: { firstSeen: 'desc' }, include: { sessions: true, pageViews: true } }), this.prisma.client.visitors.count({ where: visitorWhere })]);
+            const [data, total] = await Promise.all([this.prisma.client.visitors.findMany({ where: visitorWhere, skip, orderBy: { firstSeen: 'desc' }, include: { sessions: true, pageViews: true } }), this.prisma.client.visitors.count({ where: visitorWhere })]);
             return { success: true, data, pagination: { page: parseInt(page.toString()), limit: parseInt(limit.toString()), total, pages: Math.ceil(total / limit) } };
         } catch (error) { return new BadRequestException('Internal server error while fetching visitors'); }
     }
@@ -114,7 +114,7 @@ export class AudianceService {
                 if (startDate) where.startedAt.gte = new Date(startDate);
                 if (endDate) where.startedAt.lte = new Date(endDate);
             }
-            const [data, total] = await Promise.all([this.prisma.client.sessions.findMany({ where: sessionWhere, skip, take: limit, orderBy: { startedAt: 'desc' }, include: { visitor: true, pageViews: true } }), this.prisma.client.sessions.count({ where: sessionWhere })]);
+            const [data, total] = await Promise.all([this.prisma.client.sessions.findMany({ where: sessionWhere, skip, orderBy: { startedAt: 'desc' }, include: { visitor: true, pageViews: true } }), this.prisma.client.sessions.count({ where: sessionWhere })]);
             return { success: true, data, pagination: { page: parseInt(page.toString()), limit: parseInt(limit.toString()), total, pages: Math.ceil(total / limit) } };
         } catch (error) { return new BadRequestException('Internal server error while fetching sessions'); }
     }
@@ -141,7 +141,7 @@ export class AudianceService {
                 if (startDate) where.startedAt.gte = new Date(startDate);
                 if (endDate) where.startedAt.lte = new Date(endDate);
             }
-            const [data, total] = await Promise.all([this.prisma.client.page_view.findMany({ where: pageViewWhere, skip, take: limit, orderBy: { startedAt: 'desc' }, include: { session: { include: { visitor: true } }, events: true } }), this.prisma.client.page_view.count({ where: pageViewWhere })]);
+            const [data, total] = await Promise.all([this.prisma.client.page_view.findMany({ where: pageViewWhere, skip, orderBy: { startedAt: 'desc' }, include: { session: { include: { visitor: true } }, events: true } }), this.prisma.client.page_view.count({ where: pageViewWhere })]);
             return { success: true, data, pagination: { page: parseInt(page.toString()), limit: parseInt(limit.toString()), total, pages: Math.ceil(total / limit) } };
         } catch (error) { return new BadRequestException('Internal server error while fetching page views'); }
     }
@@ -195,12 +195,9 @@ export class AudianceService {
                 this.prisma.client.sessions.count({ where: { ...sessionWhere, endedAt: null } }),
                 this.prisma.client.page_view.count({ where: pageViewWhere }),
                 this.prisma.client.page_view.count({ where: { ...pageViewWhere, isBounce: true } }),
-                this.prisma.client.sessions.aggregate({
-                    where: sessionWhere,
-                    _avg: { durationMs: true }
-                }),
-                this.prisma.client.page_view.groupBy({ by: ['path'], where: pageViewWhere, _count: { id: true }, orderBy: { _count: { id: 'desc' } }, take: 10 }),
-                this.prisma.client.page_view.groupBy({ by: ['resourceType', 'resourceId'], where: pageViewWhere, _count: { id: true }, orderBy: { _count: { id: 'desc' } }, take: 10 }),
+                this.prisma.client.sessions.aggregate({ where: sessionWhere, _avg: { durationMs: true } }),
+                this.prisma.client.page_view.groupBy({ by: ['path'], where: pageViewWhere, _count: { id: true }, orderBy: { _count: { id: 'desc' } } }),
+                this.prisma.client.page_view.groupBy({ by: ['resourceType', 'resourceId'], where: pageViewWhere, _count: { id: true }, orderBy: { _count: { id: 'desc' } } }),
                 this.prisma.client.visitors.groupBy({ by: ['device'], where: visitorWhere, _count: { id: true }, orderBy: { _count: { id: 'desc' } } }),
                 this.prisma.client.visitors.groupBy({ by: ['browser'], where: visitorWhere, _count: { id: true }, orderBy: { _count: { id: 'desc' } } }),
             ]);

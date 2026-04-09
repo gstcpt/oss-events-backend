@@ -40,7 +40,7 @@ export class LogService {
         where: { company_id: companyId, entity: 'events', row_id: { in: eventIds } },
         include: { users: { select: { firstname: true, lastname: true, email: true } }, companies: { select: { title: true } } },
         orderBy: { id: 'desc' },
-        take: 100
+        take: 50
       });
     }
     return [];

@@ -15,45 +15,20 @@ export class PublicPageBlogsService {
             const company = await this.tenantService.getCompanyByOrigin(origin);
             const blogs = await this.prisma.client.blogs.findMany({
                 where: { company_id: company.id, status: 1 },
-                include: {
-                    users: { select: { id: true, firstname: true, lastname: true, avatar: true } },
-                    blog_media: true,
-                    blogTags: true,
-                    blogCategories: true
-                },
+                include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } }, blog_media: true, blogTags: true, blogCategories: true },
                 orderBy: { date: 'desc' }
             });
-
             // Fetch aggregates for interactions
             const blogIds = blogs.map(b => b.id);
-
-            const ratings = await this.prisma.client.new_interactions.findMany({
-                where: { target_id: { in: blogIds }, target_type: 'BLOG', type: 'RATING' },
-                select: { target_id: true, value: true }
-            });
-
-            const comments = await this.prisma.client.comments.groupBy({
-                by: ['target_id'],
-                where: { target_id: { in: blogIds }, target_type: 'BLOG', is_deleted: false },
-                _count: { id: true }
-            });
-
-            const likes = await this.prisma.client.new_interactions.groupBy({
-                by: ['target_id'],
-                where: { target_id: { in: blogIds }, target_type: 'BLOG', type: 'LIKE' },
-                _count: { id: true }
-            });
-
+            const ratings = await this.prisma.client.new_interactions.findMany({ where: { target_id: { in: blogIds }, target_type: 'BLOG', type: 'RATING' }, select: { target_id: true, value: true } });
+            const comments = await this.prisma.client.comments.groupBy({ by: ['target_id'], where: { target_id: { in: blogIds }, target_type: 'BLOG', is_deleted: false }, _count: { id: true } });
+            const likes = await this.prisma.client.new_interactions.groupBy({ by: ['target_id'], where: { target_id: { in: blogIds }, target_type: 'BLOG', type: 'LIKE' }, _count: { id: true } });
             const blogsWithStats = blogs.map(blog => {
                 const blogId = blog.id;
                 const blogRatings = ratings.filter(r => r.target_id === blogId);
-                const avgRating = blogRatings.length > 0
-                    ? blogRatings.reduce((sum, r) => sum + (parseFloat(r.value || '0') || 0), 0) / blogRatings.length
-                    : 0;
-
+                const avgRating = blogRatings.length > 0 ? blogRatings.reduce((sum, r) => sum + (parseFloat(r.value || '0') || 0), 0) / blogRatings.length : 0;
                 const commentStat = comments.find(c => c.target_id === blogId);
                 const likeStat = likes.find(l => l.target_id === blogId);
-
                 return {
                     id: Number(blog.id),
                     title: blog.title,
@@ -88,29 +63,13 @@ export class PublicPageBlogsService {
     async getBlogById(origin: string, blogId: number) {
         try {
             const company = await this.tenantService.getCompanyByOrigin(origin);
-            const blog = await this.prisma.client.blogs.findFirst({
-                where: { id: BigInt(blogId), company_id: company.id, status: 1 },
-                include: {
-                    users: { select: { id: true, firstname: true, lastname: true, avatar: true } },
-                    blog_media: true,
-                    blogTags: true,
-                    blogCategories: true
-                }
-            });
+            const blog = await this.prisma.client.blogs.findFirst({ where: { id: BigInt(blogId), company_id: company.id, status: 1 }, include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } }, blog_media: true, blogTags: true, blogCategories: true } });
             if (!blog) { throw new BadRequestException('Blog not found'); }
-
             const [interactions, comments, views] = await Promise.all([
-                this.prisma.client.new_interactions.findMany({
-                    where: { target_id: BigInt(blogId), target_type: 'BLOG' }
-                }),
-                this.prisma.client.comments.findMany({
-                    where: { target_id: BigInt(blogId), target_type: 'BLOG', is_deleted: false },
-                    include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } },
-                    orderBy: { created_at: 'desc' }
-                }),
+                this.prisma.client.new_interactions.findMany({ where: { target_id: BigInt(blogId), target_type: 'BLOG' } }),
+                this.prisma.client.comments.findMany({ where: { target_id: BigInt(blogId), target_type: 'BLOG', is_deleted: false }, include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } }, orderBy: { created_at: 'desc' } }),
                 this.prisma.client.page_view.count({ where: { resourceType: 'blogs', resourceId: blogId } })
             ]);
-
             let totalRating = 0;
             let ratingCount = 0;
             let likeCount = 0;
@@ -119,20 +78,15 @@ export class PublicPageBlogsService {
                 if (i.type === 'RATING' && i.value) {
                     totalRating += parseFloat(i.value);
                     ratingCount++;
-                } else if (i.type === 'LIKE') {
-                    likeCount++;
-                }
+                } else if (i.type === 'LIKE') { likeCount++; }
             });
-
             const averageRating = ratingCount > 0 ? totalRating / ratingCount : 0;
-
             const formattedComments = comments.map(comment => ({
                 id: Number(comment.id),
                 comment: comment.content,
                 created_at: comment.created_at.toISOString(),
                 user: comment.users ? { id: Number(comment.users.id), name: `${comment.users.firstname || ''} ${comment.users.lastname || ''}`.trim(), avatar: comment.users.avatar } : null
             }));
-
             return {
                 id: Number(blog.id),
                 title: blog.title,
@@ -184,25 +138,13 @@ export class PublicPageBlogsService {
     async getFeaturedBlogs(origin: string, limit: number = 6) {
         try {
             const company = await this.tenantService.getCompanyByOrigin(origin);
-            const blogs = await this.prisma.client.blogs.findMany({
-                where: { company_id: company.id, status: 1 },
-                include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } }, blogTags: true, blogCategories: true },
-                orderBy: { date: 'desc' },
-                take: limit
-            });
-
+            const blogs = await this.prisma.client.blogs.findMany({ where: { company_id: company.id, status: 1 }, include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } }, blogTags: true, blogCategories: true }, orderBy: { date: 'desc' }, take: limit });
             // Fetch aggregates for interactions
             const blogIds = blogs.map(b => b.id);
-
-            const ratings = await this.prisma.client.new_interactions.findMany({
-                where: { target_id: { in: blogIds }, target_type: 'BLOG', type: 'RATING' },
-                select: { target_id: true, value: true }
-            });
+            const ratings = await this.prisma.client.new_interactions.findMany({ where: { target_id: { in: blogIds }, target_type: 'BLOG', type: 'RATING' }, select: { target_id: true, value: true } });
             const blogsWithRatings = blogs.map(blog => {
                 const blogRatings = ratings.filter(r => r.target_id === blog.id);
-                const avgRating = blogRatings.length > 0
-                    ? blogRatings.reduce((sum, r) => sum + (parseFloat(r.value || '0') || 0), 0) / blogRatings.length
-                    : 0;
+                const avgRating = blogRatings.length > 0 ? blogRatings.reduce((sum, r) => sum + (parseFloat(r.value || '0') || 0), 0) / blogRatings.length : 0;
                 return {
                     id: Number(blog.id),
                     title: blog.title,
@@ -232,16 +174,12 @@ export class PublicPageBlogsService {
             const company = await this.tenantService.getCompanyByOrigin(origin);
             const blog = await this.prisma.client.blogs.findFirst({ where: { id: BigInt(blogId), company_id: company.id, status: 1 } });
             if (!blog) { throw new BadRequestException('Blog not found'); }
-            const existingLike = await this.prisma.client.new_interactions.findFirst({
-                where: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), type: 'LIKE' }
-            });
+            const existingLike = await this.prisma.client.new_interactions.findFirst({ where: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), type: 'LIKE' } });
             if (existingLike) {
                 await this.prisma.client.new_interactions.delete({ where: { id: existingLike.id } });
                 return { liked: false, message: 'Blog unliked successfully' };
             } else {
-                await this.prisma.client.new_interactions.create({
-                    data: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), company_id: blog.company_id, type: 'LIKE' }
-                });
+                await this.prisma.client.new_interactions.create({ data: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), company_id: blog.company_id, type: 'LIKE' } });
                 return { liked: true, message: 'Blog liked successfully' };
             }
         } catch (error) { throw new BadRequestException('Failed to toggle blog like: ' + error.message); }
@@ -254,9 +192,7 @@ export class PublicPageBlogsService {
      */
     async hasUserLikedBlog(blogId: number, userId: number) {
         try {
-            const like = await this.prisma.client.new_interactions.findFirst({
-                where: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), type: 'LIKE' }
-            });
+            const like = await this.prisma.client.new_interactions.findFirst({ where: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), type: 'LIKE' } });
             return !!like;
         } catch (error) { return false; }
     }
@@ -273,10 +209,7 @@ export class PublicPageBlogsService {
             const company = await this.tenantService.getCompanyByOrigin(origin);
             const blog = await this.prisma.client.blogs.findFirst({ where: { id: BigInt(blogId), company_id: company.id, status: 1 } });
             if (!blog) { throw new BadRequestException('Blog not found'); }
-            const createdComment = await this.prisma.client.comments.create({
-                data: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), company_id: blog.company_id, content: comment },
-                include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } }
-            });
+            const createdComment = await this.prisma.client.comments.create({ data: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), company_id: blog.company_id, content: comment }, include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } } });
             return {
                 id: Number(createdComment.id),
                 comment: createdComment.content,
@@ -292,11 +225,7 @@ export class PublicPageBlogsService {
             if (!existingComment) { throw new BadRequestException('Comment not found'); }
             if (Number(existingComment.user_id) !== Number(userId)) { throw new BadRequestException('You can only edit your own comments'); }
             if (!existingComment.company_id || BigInt(existingComment.company_id) !== BigInt(company.id)) { throw new BadRequestException('Comment not found'); }
-            const updatedComment = await this.prisma.client.comments.update({
-                where: { id: BigInt(commentId) },
-                data: { content: comment },
-                include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } }
-            });
+            const updatedComment = await this.prisma.client.comments.update({ where: { id: BigInt(commentId) }, data: { content: comment }, include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } } });
             return { id: Number(updatedComment.id), comment: updatedComment.content, created_at: updatedComment.created_at.toISOString(), user: updatedComment.users ? { id: Number(updatedComment.users.id), name: `${updatedComment.users.firstname || ''} ${updatedComment.users.lastname || ''}`.trim(), avatar: updatedComment.users.avatar } : null };
         } catch (error) { throw new BadRequestException('Failed to edit comment: ' + error.message); }
     }
@@ -317,16 +246,9 @@ export class PublicPageBlogsService {
             const blog = await this.prisma.client.blogs.findFirst({ where: { id: BigInt(blogId), company_id: company.id, status: 1 } });
             if (!blog) { throw new BadRequestException('Blog not found'); }
             if (rating < 1 || rating > 5) { throw new BadRequestException('Rating must be between 1 and 5'); }
-            const existingRating = await this.prisma.client.new_interactions.findFirst({
-                where: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), type: 'RATING' }
-            });
-            if (existingRating) {
-                await this.prisma.client.new_interactions.update({ where: { id: existingRating.id }, data: { value: String(rating) } });
-            } else {
-                await this.prisma.client.new_interactions.create({
-                    data: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), company_id: blog.company_id, type: 'RATING', value: String(rating) }
-                });
-            }
+            const existingRating = await this.prisma.client.new_interactions.findFirst({ where: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), type: 'RATING' } });
+            if (existingRating) { await this.prisma.client.new_interactions.update({ where: { id: existingRating.id }, data: { value: String(rating) } }); }
+            else { await this.prisma.client.new_interactions.create({ data: { target_id: BigInt(blogId), target_type: 'BLOG', user_id: BigInt(userId), company_id: blog.company_id, type: 'RATING', value: String(rating) } }); }
             const ratings = await this.prisma.client.new_interactions.findMany({ where: { target_id: BigInt(blogId), target_type: 'BLOG', type: 'RATING' } });
             const averageRating = ratings.length > 0 ? ratings.reduce((sum, r) => sum + (parseFloat(r.value || '0') || 0), 0) / ratings.length : 0;
             return { success: true, message: 'Blog rated successfully', newRating: averageRating };
@@ -337,11 +259,7 @@ export class PublicPageBlogsService {
             const company = await this.tenantService.getCompanyByOrigin(origin);
             const blog = await this.prisma.client.blogs.findFirst({ where: { id: BigInt(blogId), company_id: company.id, status: 1 } });
             if (!blog) { throw new BadRequestException('Blog not found'); }
-            const comments = await this.prisma.client.comments.findMany({
-                where: { target_id: BigInt(blogId), target_type: 'BLOG', is_deleted: false },
-                include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } },
-                orderBy: { created_at: 'desc' }
-            });
+            const comments = await this.prisma.client.comments.findMany({ where: { target_id: BigInt(blogId), target_type: 'BLOG', is_deleted: false }, include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } }, orderBy: { created_at: 'desc' } });
             return comments.map(comment => ({
                 id: Number(comment.id),
                 comment: comment.content,
@@ -396,31 +314,19 @@ export class PublicPageBlogsService {
                     company_id: company.id,
                     status: 1,
                     id: { not: BigInt(blogId) },
-                    OR: [
-                        { blogCategories: { some: { category_title: { in: currentBlog.blogCategories.map(c => c.category_title) } } } },
-                        { blogTags: { some: { tag_title: { in: currentBlog.blogTags.map(t => t.tag_title) } } } }
-                    ]
+                    OR: [{ blogCategories: { some: { category_title: { in: currentBlog.blogCategories.map(c => c.category_title) } } } }, { blogTags: { some: { tag_title: { in: currentBlog.blogTags.map(t => t.tag_title) } } } }]
                 },
                 include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } }, blogTags: true, blogCategories: true },
                 orderBy: [{ date: 'desc' }, { views: 'desc' }],
                 take: limit
             });
-
             // Fetch aggregates for interactions
             const blogIds = relatedBlogs.map(b => b.id);
-
-            const ratings = await this.prisma.client.new_interactions.findMany({
-                where: { target_id: { in: blogIds }, target_type: 'BLOG', type: 'RATING' },
-                select: { target_id: true, value: true }
-            });
-
+            const ratings = await this.prisma.client.new_interactions.findMany({ where: { target_id: { in: blogIds }, target_type: 'BLOG', type: 'RATING' }, select: { target_id: true, value: true } });
             const blogsWithRatings = await Promise.all(relatedBlogs.map(async (blog) => {
                 const blogRatings = ratings.filter(r => r.target_id === blog.id);
-                const avgRating = blogRatings.length > 0
-                    ? blogRatings.reduce((sum, r) => sum + (parseFloat(r.value || '0') || 0), 0) / blogRatings.length
-                    : 0;
+                const avgRating = blogRatings.length > 0 ? blogRatings.reduce((sum, r) => sum + (parseFloat(r.value || '0') || 0), 0) / blogRatings.length : 0;
                 const actualViews = await this.prisma.client.page_view.count({ where: { resourceType: 'blogs', resourceId: Number(blog.id) } });
-
                 return {
                     id: Number(blog.id),
                     title: blog.title,

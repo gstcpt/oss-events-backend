@@ -106,14 +106,12 @@ export class PublicPageItemsService {
                 this.prisma.client.new_interactions.findMany({
                     where: { target_id: BigInt(id), target_type: 'ITEM' },
                     include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } },
-                    orderBy: { id: 'desc' },
-                    take: 100
+                    orderBy: { id: 'desc' }
                 }),
                 this.prisma.client.comments.findMany({
                     where: { target_id: BigInt(id), target_type: 'ITEM', is_deleted: false },
                     include: { users: { select: { id: true, firstname: true, lastname: true, avatar: true } } },
-                    orderBy: { created_at: 'desc' },
-                    take: 50
+                    orderBy: { created_at: 'desc' }
                 }),
                 this.pageViewService.getViewStats({ resourceType: 'items', resourceId: id }),
                 this.pageEventService.getShareCount('items', id, company.id)
