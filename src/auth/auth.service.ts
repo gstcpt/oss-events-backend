@@ -19,6 +19,13 @@ export class AuthService {
   async register(registerDto: RegisterDto, req: Request) {
     const { firstname, lastname, username, email, password, origin, role_id } = registerDto;
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Verify bcrypt hash is exactly 60 characters (required for proper comparison)
+    if (hashedPassword.length !== 60) {
+      this.logger.error(`Password hash length incorrect: ${hashedPassword.length}, expected 60`);
+      throw new BadRequestException('Password hashing failed. Please try again.');
+    }
+
     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const company = await this.tenantService.getCompanyByOrigin(origin);
     if (!company) { throw new BadRequestException(`No company found for url: ${origin}`); }
@@ -26,12 +33,14 @@ export class AuthService {
     if (existingUser) { throw new BadRequestException('User with this email already exists for this company'); }
     if (!role_id) { throw new BadRequestException('Role ID is required'); }
     try {
-      const user = await this.prisma.client.users.create({ data: { firstname, lastname, username, email, password: hashedPassword, email_verification_token: token, email_verified: false, status: 0, role_id: role_id, company_id: Number(company.id) } });
+      let status = 1;
+      if (role_id == 3) { status = 0; }
+      const user = await this.prisma.client.users.create({ data: { firstname, lastname, username, email, password: hashedPassword, email_verification_token: token, email_verified: false, status: status, role_id: role_id, company_id: Number(company.id) } });
       await this.emailService.sendEmailVerification(email, token, company.title);
       await this.logService.createLogForUserAction(Number(user.id), 'users', Number(user.id), 'create', `User registered: ${username}`);
       const admin = await this.prisma.client.users.findMany({ where: { role_id: 2, company_id: Number(company.id) } });
       admin.map(async (a) => await this.notificationService.createNotification(Number(user.id), Number(a.id), `A new user ${user.id}: ${user.firstname} ${user.lastname} email: ${user.email} has been registered successfully for your company`));
-      const { password, email_verification_token, ...safeUser } = user;
+      const { password: _, email_verification_token, ...safeUser } = user;
       return { safeUser, message: 'User registered. Please verify your email.' };
     }
     catch (error) {
@@ -84,6 +93,13 @@ export class AuthService {
     if (user) {
       const company = await this.prisma.client.companies.findFirst({ where: { id: Number(user.company_id) } });
       const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      // Verify bcrypt hash is exactly 60 characters
+      if (hashedPassword.length !== 60) {
+        this.logger.error(`Password hash length incorrect in newPassword: ${hashedPassword.length}, expected 60`);
+        throw new BadRequestException('Password hashing failed. Please try again.');
+      }
+
       await this.prisma.client.users.update({ where: { id: user.id }, data: { password: hashedPassword, password_reset_token: null, password_reset_token_expiry: null } });
       if (company) { await this.emailService.sendPasswordChange(user.email, company.title); }
       await this.logService.createLogForUserAction(Number(user.id), 'users', Number(user.id), 'password_reset', 'Password reset successfully');
@@ -116,6 +132,13 @@ export class AuthService {
         throw new BadRequestException('Invalid credentials. Please check your email and password.');
       }
       this.logger.log(`User found for company: ${user.username}`);
+
+      // Check if password hash is valid (should be exactly 60 characters for bcrypt)
+      if (user.password.length !== 60) {
+        this.logger.error(`Corrupted password hash detected for user ${user.email}: length ${user.password.length}, expected 60`);
+        throw new BadRequestException('Your password appears to be corrupted. Please use "Forgot Password" to reset it.');
+      }
+
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
         if (user) { await this.logService.createLogForUserAction(Number(user.id), 'users', Number(user.id), 'login_failed', `Failed login attempt for email: ${email}`); }
