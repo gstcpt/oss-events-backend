@@ -41,7 +41,11 @@ export class DashboardService {
     async getDashboard(currentUser: any) {
         this.logger.log(`Getting dashboard for user: ${currentUser.email}`);
         try {
-            await this.ensureRole(currentUser);
+            try {
+                await this.ensureRole(currentUser);
+            } catch (error) {
+                this.logger.error(`Error ensuring role: ${error.message}`);
+            }
             const role = currentUser.role;
             const data: any = { profile: { ...currentUser, password: '' } };
 
@@ -115,16 +119,56 @@ export class DashboardService {
         return { providers, clients, items, events, categories, tags };
     }
 
-    private async getLiveActivity(role: string, company_id?: any, user_id?: any) {
-        const activities: any[] = [];
-        const interactionWhere: any = {};
-        if (company_id) interactionWhere.company_id = BigInt(company_id);
-        if (user_id && role === 'Client') interactionWhere.user_id = BigInt(user_id);
-        if (user_id && role === 'Provider') {
-            const providerItems = await this.prisma.client.items.findMany({ where: { provider_id: BigInt(user_id) }, select: { id: true } });
-            interactionWhere.target_type = 'ITEM';
-            interactionWhere.target_id = { in: providerItems.map(i => i.id) };
+private async getLiveActivity(role: string, company_id?: any, user_id?: any) {
+        try {
+            const activities: any[] = [];
+            const interactionWhere: any = {};
+            if (company_id) interactionWhere.company_id = BigInt(company_id);
+            if (user_id && role === 'Client') interactionWhere.user_id = BigInt(user_id);
+            if (user_id && role === 'Provider') {
+                try {
+                    const providerItems = await this.prisma.client.items.findMany({ where: { provider_id: BigInt(user_id) }, select: { id: true } });
+                    interactionWhere.target_type = 'ITEM';
+                    interactionWhere.target_id = { in: providerItems.map(i => i.id) };
+                } catch (e) { /* ignore - provider may have no items */ }
+            }
+            const interactions = await this.prisma.client.new_interactions.findMany({ where: interactionWhere, orderBy: { created_at: 'desc' }, take: 10, include: { users: { select: { firstname: true, lastname: true, avatar: true } } } });
+            for (const inter of interactions) {
+                activities.push({
+                    id: `inter-${inter.id}`,
+                    type: 'interaction',
+                    action: inter.type,
+                    targetType: inter.target_type,
+                    targetId: inter.target_id.toString(),
+                    user: `${inter.users.firstname} ${inter.users.lastname}`,
+                    avatar: inter.users.avatar,
+                    timestamp: inter.created_at,
+                    description: this.getInteractionDescription(role, inter)
+                });
+            }
+            const eventWhere: any = {};
+            if (company_id) eventWhere.company_id = BigInt(company_id);
+            if (user_id && role === 'Client') eventWhere.client_id = BigInt(user_id);
+            if (user_id && role === 'Provider') { eventWhere.event_lines = { some: { items: { provider_id: BigInt(user_id) } } }; }
+            const events = await this.prisma.client.events.findMany({ where: eventWhere, orderBy: { id: 'desc' }, take: 5, include: { users: { select: { firstname: true, lastname: true, avatar: true } } } });
+            for (const event of events) {
+                activities.push({
+                    id: `event-${event.id}`,
+                    type: 'event',
+                    action: 'BOOKING',
+                    title: event.title,
+                    user: `${event.users?.firstname || 'System'} ${event.users?.lastname || ''}`,
+                    avatar: event.users?.avatar,
+                    timestamp: new Date(),
+                    description: { typeKey: 'newEventBooking', title: event.title }
+                });
+            }
+            return activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 10);
+        } catch (error) {
+            this.logger.error(`Error getting live activity: ${error.message}`);
+            return [];
         }
+    }
         const interactions = await this.prisma.client.new_interactions.findMany({ where: interactionWhere, orderBy: { created_at: 'desc' }, take: 10, include: { users: { select: { firstname: true, lastname: true, avatar: true } } } });
         for (const inter of interactions) {
             activities.push({
@@ -245,19 +289,29 @@ export class DashboardService {
     }
 
     async getProviderStats(currentUser: any) {
-        const provider_id = BigInt(currentUser.id);
-        const itemsCount = await this.prisma.client.items.count({ where: { provider_id } });
-        const eventLines = await this.prisma.client.event_lines.findMany({ where: { items: { provider_id } }, select: { event_id: true } });
-        const uniqueEventIds = [...new Set(eventLines.map(el => el.event_id))];
-        const bookingsCount = uniqueEventIds.length;
-        const interactions = await this.prisma.client.new_interactions.count({ where: { target_type: 'ITEM', target_id: { in: (await this.prisma.client.items.findMany({ where: { provider_id }, select: { id: true } })).map(i => i.id) } } });
-        return { items: itemsCount, bookings: bookingsCount, interactions };
+        try {
+            const provider_id = BigInt(currentUser.id);
+            const itemsCount = await this.prisma.client.items.count({ where: { provider_id } });
+            const eventLines = await this.prisma.client.event_lines.findMany({ where: { items: { provider_id } }, select: { event_id: true } });
+            const uniqueEventIds = [...new Set(eventLines.map(el => el.event_id))];
+            const bookingsCount = uniqueEventIds.length;
+            const interactions = await this.prisma.client.new_interactions.count({ where: { target_type: 'ITEM', target_id: { in: (await this.prisma.client.items.findMany({ where: { provider_id }, select: { id: true } })).map(i => i.id) } } });
+            return { items: itemsCount, bookings: bookingsCount, interactions };
+        } catch (error) {
+            this.logger.error(`Error getting provider stats: ${error.message}`);
+            return { items: 0, bookings: 0, interactions: 0 };
+        }
     }
 
     async getClientStats(currentUser: any) {
-        const client_id = BigInt(currentUser.id);
-        const [eventsCount, interactionsCount] = await Promise.all([this.prisma.client.events.count({ where: { client_id } }), this.prisma.client.new_interactions.count({ where: { user_id: client_id } })]);
-        return { events: eventsCount, interactions: interactionsCount };
+        try {
+            const client_id = BigInt(currentUser.id);
+            const [eventsCount, interactionsCount] = await Promise.all([this.prisma.client.events.count({ where: { client_id } }), this.prisma.client.new_interactions.count({ where: { user_id: client_id } })]);
+            return { events: eventsCount, interactions: interactionsCount };
+        } catch (error) {
+            this.logger.error(`Error getting client stats: ${error.message}`);
+            return { events: 0, interactions: 0 };
+        }
     }
 
     async getTopItems(currentUser: any) {
@@ -322,20 +376,30 @@ export class DashboardService {
     }
 
     async getProviderUpcomingEvents(currentUser: any) {
-        const provider_id = BigInt(currentUser.id);
-        const events = await this.prisma.client.events.findMany({
-            where: { event_lines: { some: { items: { provider_id } } }, start_date: { gte: new Date() } },
-            select: { id: true, title: true, start_date: true, end_date: true },
-            orderBy: { start_date: 'asc' },
-            take: 5
-        });
-        return events.map(event => ({ id: Number(event.id), title: event.title, start_date: this.fmtDate(event?.start_date), end_date: this.fmtDate(event?.end_date) }));
+        try {
+            const provider_id = BigInt(currentUser.id);
+            const events = await this.prisma.client.events.findMany({
+                where: { event_lines: { some: { items: { provider_id } } }, start_date: { gte: new Date() } },
+                select: { id: true, title: true, start_date: true, end_date: true },
+                orderBy: { start_date: 'asc' },
+                take: 5
+            });
+            return events.map(event => ({ id: Number(event.id), title: event.title, start_date: this.fmtDate(event?.start_date), end_date: this.fmtDate(event?.end_date) }));
+        } catch (error) {
+            this.logger.error(`Error getting provider upcoming events: ${error.message}`);
+            return [];
+        }
     }
 
     async getClientUpcomingEvents(currentUser: any) {
-        const client_id = BigInt(currentUser.id);
-        const events = await this.prisma.client.events.findMany({ where: { client_id, start_date: { gte: new Date() } }, select: { id: true, title: true, start_date: true, end_date: true }, orderBy: { start_date: 'asc' }, take: 5 });
-        return events.map(event => ({ id: Number(event.id), title: event.title, start_date: this.fmtDate(event?.start_date), end_date: this.fmtDate(event?.end_date) }));
+        try {
+            const client_id = BigInt(currentUser.id);
+            const events = await this.prisma.client.events.findMany({ where: { client_id, start_date: { gte: new Date() } }, select: { id: true, title: true, start_date: true, end_date: true }, orderBy: { start_date: 'asc' }, take: 5 });
+            return events.map(event => ({ id: Number(event.id), title: event.title, start_date: this.fmtDate(event?.start_date), end_date: this.fmtDate(event?.end_date) }));
+        } catch (error) {
+            this.logger.error(`Error getting client upcoming events: ${error.message}`);
+            return [];
+        }
     }
 
     async getCompanyAddress(currentUser: any) {
