@@ -163,44 +163,11 @@ private async getLiveActivity(role: string, company_id?: any, user_id?: any) {
                     description: { typeKey: 'newEventBooking', title: event.title }
                 });
             }
-            return activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 10);
+return activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 10);
         } catch (error) {
             this.logger.error(`Error getting live activity: ${error.message}`);
             return [];
         }
-    }
-        const interactions = await this.prisma.client.new_interactions.findMany({ where: interactionWhere, orderBy: { created_at: 'desc' }, take: 10, include: { users: { select: { firstname: true, lastname: true, avatar: true } } } });
-        for (const inter of interactions) {
-            activities.push({
-                id: `inter-${inter.id}`,
-                type: 'interaction',
-                action: inter.type,
-                targetType: inter.target_type,
-                targetId: inter.target_id.toString(),
-                user: `${inter.users.firstname} ${inter.users.lastname}`,
-                avatar: inter.users.avatar,
-                timestamp: inter.created_at,
-                description: this.getInteractionDescription(role, inter)
-            });
-        }
-        const eventWhere: any = {};
-        if (company_id) eventWhere.company_id = BigInt(company_id);
-        if (user_id && role === 'Client') eventWhere.client_id = BigInt(user_id);
-        if (user_id && role === 'Provider') { eventWhere.event_lines = { some: { items: { provider_id: BigInt(user_id) } } }; }
-        const events = await this.prisma.client.events.findMany({ where: eventWhere, orderBy: { id: 'desc' }, take: 5, include: { users: { select: { firstname: true, lastname: true, avatar: true } } } });
-        for (const event of events) {
-            activities.push({
-                id: `event-${event.id}`,
-                type: 'event',
-                action: 'BOOKING',
-                title: event.title,
-                user: `${event.users?.firstname || 'System'} ${event.users?.lastname || ''}`,
-                avatar: event.users?.avatar,
-                timestamp: new Date(),
-                description: { typeKey: 'newEventBooking', title: event.title }
-            });
-        }
-        return activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 10);
     }
 
     private getInteractionDescription(role: string, inter: any) {

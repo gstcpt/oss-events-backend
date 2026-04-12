@@ -214,7 +214,7 @@ export class RaportService {
             const clients = await this.getUsersByRoleTitle('Client', currentUser);
             const clientIds = clients.map((c: any) => c.id);
             const logs = await this.prisma.client.logs.findMany({ where: { entity: 'users', row_id: { in: clientIds }, action: 'create' }, select: { row_id: true, created_at: true }, orderBy: { id: 'desc' } });
-            const logsMap = new Map<any, Date>(logs.map(log => [log.row_id, log.created_at]));
+            const logsMap = new Map<any, Date>(logs.filter(l => l.created_at).map(log => [log.row_id, log.created_at as Date]));
             const events = await this.prisma.client.events.groupBy({ by: ['client_id'], _count: { id: true }, where: { client_id: { in: clientIds } } });
             const eventsMap = new Map(events.map(e => [e.client_id, e._count.id]));
             const data = clients.map((c: any) => ({
