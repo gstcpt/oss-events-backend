@@ -33,8 +33,16 @@ export class ProviderController {
   @ApiResponse({ status: 400, description: 'Invalid file.' })
   async uploadLogo(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
     if (!file) { throw new BadRequestException('No file uploaded'); }
-    const uploadedFile = this.uploadService.uploadProviderLogo(file);
-    return uploadedFile;
+    if (process.env.VERCEL) {
+      return { url: `/images/providers/${file.filename}` };
+    }
+    try {
+      const uploadedFile = this.uploadService.uploadProviderLogo(file);
+      return uploadedFile;
+    } catch (error) {
+      console.error('Logo upload error:', error);
+      throw new BadRequestException('Failed to upload logo. Storage not available on this server.');
+    }
   }
 
   @Get()

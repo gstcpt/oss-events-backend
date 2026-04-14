@@ -58,9 +58,18 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Invalid file.' })
   async uploadAvatar(@UploadedFile() file: Express.Multer.File, @Req() req: any) {
     if (!file) { throw new BadRequestException('No file uploaded'); }
-    const uploadedFile = this.uploadService.uploadUserAvatar(file);
-    await this.userService.update(BigInt(req.user.id), { avatar: uploadedFile.url } as any, req.user);
-    return uploadedFile;
+    if (process.env.VERCEL) {
+      await this.userService.update(BigInt(req.user.id), { avatar: `/images/users/${file.filename}` } as any, req.user);
+      return { url: `/images/users/${file.filename}` };
+    }
+    try {
+      const uploadedFile = this.uploadService.uploadUserAvatar(file);
+      await this.userService.update(BigInt(req.user.id), { avatar: uploadedFile.url } as any, req.user);
+      return uploadedFile;
+    } catch (error) {
+      console.error('Avatar upload error:', error);
+      throw new BadRequestException('Failed to upload avatar. Storage not available on this server.');
+    }
   }
 
   @Get('admins/list/:id')

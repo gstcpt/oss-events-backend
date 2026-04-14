@@ -33,24 +33,32 @@ export class UploadService {
   }
   uploadUserAvatar(file: Express.Multer.File): { url: string } {
     if (!file) throw new BadRequestException('No file uploaded');
+    try {
+      const uploadPath = join(__dirname, '../../../../frontend/public/images/users');
+      if (!existsSync(uploadPath)) { mkdirSync(uploadPath, { recursive: true }); }
+    } catch (e) { console.warn('Upload folder creation failed, using existing path'); }
     return { url: `/images/users/${file.filename}` };
   }
   uploadProviderLogo(file: Express.Multer.File): { url: string } {
     if (!file) throw new BadRequestException('No file uploaded');
+    try {
+      const uploadPath = join(__dirname, '../../../../frontend/public/images/providers');
+      if (!existsSync(uploadPath)) { mkdirSync(uploadPath, { recursive: true }); }
+    } catch (e) { console.warn('Upload folder creation failed, using existing path'); }
     return { url: `/images/providers/${file.filename}` };
   }
   uploadBlogImage(file: Express.Multer.File): { url: string } {
     if (!file) throw new BadRequestException('No file uploaded');
     const mimeType = file.mimetype;
     let basePath = `/images/blogs/${file.filename}`;
-    if (mimeType.startsWith('video')) {basePath = `/videos/blogs/${file.filename}`;}
+    if (mimeType.startsWith('video')) { basePath = `/videos/blogs/${file.filename}`; }
     return { url: basePath };
   }
 }
 export const logoMulterConfig = {
   storage: diskStorage({
     destination: (req, file, cb) => {
-      const uploadPath = join(__dirname, '../../../../frontend/public/images/logos');
+      const uploadPath = getUploadPath('images/logos');
       if (!existsSync(uploadPath)) { mkdirSync(uploadPath, { recursive: true }); }
       cb(null, uploadPath);
     },
@@ -71,7 +79,7 @@ export const categoryMulterConfig = {
   storage: diskStorage({
     destination: (req, file, cb) => {
       try {
-        const uploadPath = join(__dirname, '../../../../frontend/public/images/categories');
+        const uploadPath = getUploadPath('images/categories');
         if (!existsSync(uploadPath)) { mkdirSync(uploadPath, { recursive: true }); }
         cb(null, uploadPath);
       } catch (error) { cb(error, ''); }
@@ -93,6 +101,11 @@ export const categoryMulterConfig = {
   },
   limits: { fileSize: 5 * 1024 * 1024 },
 };
+const getUploadPath = (subPath: string): string => {
+  const basePath = process.env.VERCEL ? '/tmp' : join(__dirname, '../../../../frontend/public');
+  return join(basePath, subPath);
+};
+
 export const fileMulterConfig = {
   storage: diskStorage({
     destination: (req, file, cb) => {
@@ -100,11 +113,11 @@ export const fileMulterConfig = {
         let uploadPath;
         const mimeType = file.mimetype;
         if (mimeType.startsWith('image')) {
-          if (file.fieldname === 'hero_image' || file.fieldname === 'cover_image') { uploadPath = join(__dirname, '../../../../frontend/public/images/items'); }
-          else { uploadPath = join(__dirname, '../../../../frontend/public/images/media/items'); }
+          if (file.fieldname === 'hero_image' || file.fieldname === 'cover_image') { uploadPath = getUploadPath('images/items'); }
+          else { uploadPath = getUploadPath('images/media/items'); }
         }
-        else if (mimeType.startsWith('video')) { uploadPath = join(__dirname, '../../../../frontend/public/videos/items'); }
-        else { uploadPath = join(__dirname, '../../../../frontend/public/documents/items'); }
+        else if (mimeType.startsWith('video')) { uploadPath = getUploadPath('videos/items'); }
+        else { uploadPath = getUploadPath('documents/items'); }
         if (!existsSync(uploadPath)) { mkdirSync(uploadPath, { recursive: true }); }
         cb(null, uploadPath);
       } catch (error) { cb(error, ''); }
@@ -130,7 +143,7 @@ export const userAvatarMulterConfig = {
   storage: diskStorage({
     destination: (req, file, cb) => {
       try {
-        const uploadPath = join(__dirname, '../../../../frontend/public/images/users');
+        const uploadPath = process.env.VERCEL ? '/tmp/images/users' : join(__dirname, '../../../../frontend/public/images/users');
         if (!existsSync(uploadPath)) { mkdirSync(uploadPath, { recursive: true }); }
         cb(null, uploadPath);
       } catch (error) { cb(error, ''); }
@@ -157,8 +170,8 @@ export const blogImageMulterConfig = {
       try {
         const mimeType = file.mimetype;
         let uploadPath: string;
-        if (mimeType.startsWith('image')) {uploadPath = join(__dirname, '../../../../frontend/public/images/blogs');}
-        else if (mimeType.startsWith('video')) {uploadPath = join(__dirname, '../../../../frontend/public/videos/blogs');}
+        if (mimeType.startsWith('image')) { uploadPath = join(__dirname, '../../../../frontend/public/images/blogs'); }
+        else if (mimeType.startsWith('video')) { uploadPath = join(__dirname, '../../../../frontend/public/videos/blogs'); }
         else {
           cb(new BadRequestException('Only image and video files are allowed') as any, '');
           return;
@@ -188,7 +201,7 @@ export const providerLogoMulterConfig = {
   storage: diskStorage({
     destination: (req, file, cb) => {
       try {
-        const uploadPath = join(__dirname, '../../../../frontend/public/images/providers');
+        const uploadPath = process.env.VERCEL ? '/tmp/images/providers' : join(__dirname, '../../../../frontend/public/images/providers');
         if (!existsSync(uploadPath)) { mkdirSync(uploadPath, { recursive: true }); }
         cb(null, uploadPath);
       } catch (error) { cb(error, ''); }
